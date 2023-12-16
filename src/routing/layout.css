@@ -1,24 +1,59 @@
+/* 
+  Dark/Mixed - 100: For body background color
+  Dark/Mixed - 200: For cards background color
+  Dark/Mixed - 300: For chips buttons, dropdowns background color
+  Dark/Mixed - 400: For sidebars, navbar background color
+  Dark/Mixed - 500: For modal, dialogs background color
+  Dark/Mixed - 600: For on background texts color
+
+*/
+:root {
+  /** CSS DARK THEME PRIMARY COLORS */
+  --color-primary-100: #382bf0;
+  --color-primary-200: #5e43f3;
+  --color-primary-300: #7a5af5;
+  --color-primary-400: #9171f8;
+  --color-primary-500: #a688fa;
+  --color-primary-600: #ba9ffb;
+  /** CSS DARK THEME SURFACE COLORS */
+  --color-surface-100: #121212;
+  --color-surface-200: #282828;
+  --color-surface-300: #3f3f3f;
+  --color-surface-400: #575757;
+  --color-surface-500: #717171;
+  --color-surface-600: #8b8b8b;
+  /** CSS DARK THEME MIXED SURFACE COLORS */
+  --color-surface-mixed-100: #1a1625;
+  --color-surface-mixed-200: #2f2b3a;
+  --color-surface-mixed-300: #46424f;
+  --color-surface-mixed-400: #5e5a66;
+  --color-surface-mixed-500: #76737e;
+  --color-surface-mixed-600: #908d96;
+}
+
 body {
     font-family: "Lato", sans-serif;
+    background-color: var(--color-surface-mixed-100);
+    color: white;
   }
   
   .sidenav {
     height: 100%;
-    width: 200px;
+    width: 50px;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: var(--color-surface-300);
     overflow-x: hidden;
-    padding-top: 20px;
+    padding-top: 10px;
   }
   
   .sidenav a {
-    padding: 6px 6px 6px 32px;
+    padding: 12px 12px 12px 12px;
     text-decoration: none;
     font-size: 25px;
-    color: #818181;
+    color: white;
     display: block;
   }
   
@@ -27,10 +62,25 @@ body {
   }
   
   .main {
-    margin-left: 200px; /* Same as the width of the sidenav */
+    margin-left: 50px; /* Same as the width of the sidenav */
   }
   
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
   }
+
+label {
+  font-size: 22px;
+  margin: 5px;
+}
+
+input {
+  background-color: var(--color-surface-mixed-300);
+  border-radius: 4px;
+  border: none;
+  font-size: 20px;
+  margin: 5px;
+  color: white;
+  padding: 5px;
+}

@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ManageApp from '../manage/manage-app.js'
 
 export default function HomePage(props) {
     return <div>

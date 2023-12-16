@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HashRouter, Routes, Route } from "react-router-dom";
-import ManageApp from '../pages/manage/manage-app.js'
+import ManageApp from '../pages/manage/manage-app.jsx'
 import HomePage from '../pages/home/home.jsx';
 import Layout from './layout.jsx';
 
