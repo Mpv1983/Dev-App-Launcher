@@ -19,9 +19,9 @@ export default function Modal(props) {
         }
     });
 
-    return <div id="myModal" class="modal" style={{display:displayModal}}>
-                <div class="modal-content" style={{display:displayModal}}>
-                <span class="close" onClick={hideModal}>&times;</span>
+    return <div id="myModal" className="modal" style={{display:displayModal}}>
+                <div className="modal-content" style={{display:displayModal}}>
+                <span className="close" onClick={hideModal}>&times;</span>
                 <p>{ props.children }</p>
                 </div>
             </div>;
