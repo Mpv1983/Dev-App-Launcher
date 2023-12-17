@@ -6,4 +6,3 @@ import { ServiceProviderContextProvider } from './contexts/serviceProviderContex
 const domNode = document.getElementById('root');
 const root = createRoot(domNode);
 root.render(<ServiceProviderContextProvider><AppRouter/></ServiceProviderContextProvider>);
-//ReactDOM.render(<ServiceProviderContextProvider><AppRouter/></ServiceProviderContextProvider>, document.getElementById("root"));

@@ -1,16 +1,21 @@
 import React, { createContext, useContext, useState } from 'react';
+import ConfigurationService from '../services/ConfigurationService.jsx';
 
 const ServiceProviderContext = createContext();
 
 export const ServiceProviderContextProvider = ({ children }) => {
 
-    const value = {'serviceProvider': 'helloworld'};
-  
-    return (
-      <ServiceProviderContext.Provider value={value}>
-        {children}
-      </ServiceProviderContext.Provider>
-    );
+  var services = {
+    configurationService : new ConfigurationService()
   };
+
+  const value = {'serviceProvider': services};
+
+  return (
+    <ServiceProviderContext.Provider value={value}>
+      {children}
+    </ServiceProviderContext.Provider>
+  );
+};
 
 export default ServiceProviderContext;

@@ -24,9 +24,13 @@ export default function ManageApp(props) {
         SetModal(false);
     }
 
-    return <div>
-            <h1>Manage App</h1>
+    function saveApplication(){
+        serviceProvider.configurationService.addApplication({port:1234, name:'test'})
+    }
 
+    return <div>
+            <h1>Configure Application</h1>
+            <hr/>
 
             <Modal showModal={modalState} modalClosedEvent={hideModal}>{fileSelectError}</Modal>
             <FilePicker extensions={['csproj']} onChange={FileObject => handleFileSelected(FileObject)} onError={errMsg => handleFileError(errMsg)}>
@@ -36,5 +40,7 @@ export default function ManageApp(props) {
             </FilePicker>
 
             <TextField label='Port'/>
+
+            <button onClick={saveApplication()}>Save</button>
         </div>;
   }
