@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
+import PlayIcon from '../../icons/play.jsx';
 
 export default function ApplicationList(props) {
 
@@ -9,6 +10,7 @@ export default function ApplicationList(props) {
     return <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Application</th>
                         <th>Port</th>
                     </tr>
@@ -17,6 +19,7 @@ export default function ApplicationList(props) {
             <tbody>
             {apps.map((app) => (
                 <tr key={app.port}>
+                    <td><PlayIcon color="#035720" size="10"/></td>
                     <td>{app.name}</td>
                     <td>{app.port}</td>
                 </tr>
