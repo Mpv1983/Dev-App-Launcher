@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import TextField from '../../component/text-field.jsx';
 import FilePickerField from '../../component/file-picker-field.jsx';
 import handleChange from '../../component/handleChange.js';
@@ -10,14 +11,16 @@ export default function ManageApp(props) {
     const [appName, SetAppName] = useState('');
     const { serviceProvider } = useContext(ServiceProviderContext);
     var file = {name:'', path:'', lastModified:0, lastModifiedDate:{}, size:0, type:''};
-
+    let navigate = useNavigate();
+    
     function handleFileSelected(fileObject){
         file = fileObject;
         SetAppName(file.name);
     }
 
     function saveApplication(){
-        serviceProvider.configurationService.addApplication({port:port, name:appName})
+        serviceProvider.configurationService.addApplication({port:port, name:appName});
+        navigate("/");
     }
 
     return <div>
