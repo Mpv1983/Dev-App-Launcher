@@ -19,7 +19,7 @@ export default function ApplicationList(props) {
             <tbody>
             {apps.map((app) => (
                 <tr key={app.port}>
-                    <td><PlayIcon color="#035720" size="10"/></td>
+                    <td><PlayIcon color="#035720" hoverColor="#0bb847" size="12" onClickEventHandler={()=>console.log('hello world')}/></td>
                     <td>{app.name}</td>
                     <td>{app.port}</td>
                 </tr>
