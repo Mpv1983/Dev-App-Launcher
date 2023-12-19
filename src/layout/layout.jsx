@@ -7,16 +7,16 @@ import HomeIcon from '../icons/home.jsx';
 const Layout = () => {
     return (
       <>
-        <div class="sidenav">
+        <div className="sidenav">
           <Link to="/">
             <HomeIcon color="white" size="25"/>
           </Link>
-          <Link to="/manage-app">
+          <Link to="/manage/index">
             <CogIcon color="white" size="25"/>
           </Link>
         </div>
 
-        <div class="main">
+        <div className="main">
             <Outlet />
         </div>
         

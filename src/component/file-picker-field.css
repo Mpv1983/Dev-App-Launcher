@@ -1,0 +1,30 @@
+.file-picker {
+    background-color: var(--color-surface-mixed-300);
+    font-weight:600;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 25px;
+    text-decoration: none;
+    max-width: 500px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.file-picker-button{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: auto; 
+    margin-right: 0px;
+    font-size: 15px;
+}
+
+.file-picker-label{
+    min-width: 300px;
+    font-size: 15px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
