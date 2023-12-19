@@ -1,11 +1,21 @@
 import React, { useContext } from 'react';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import PlayIcon from '../../icons/play.jsx';
+import StopIcon from '../../icons/stop.jsx';
 
 export default function ApplicationList(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
     var apps = serviceProvider.configurationService.apps;
+    var appServiceRunner = serviceProvider.appRunnerService;
+    
+    function onPlay(path, port){
+        console.log('play',path, port);
+    }
+
+    function onStop(port){
+        console.log('play', port);
+    }
 
     return <table>
                 <thead>
@@ -19,7 +29,10 @@ export default function ApplicationList(props) {
             <tbody>
             {apps.map((app) => (
                 <tr key={app.port}>
-                    <td><PlayIcon color="#035720" hoverColor="#0bb847" size="12" onClickEventHandler={()=>console.log('hello world')}/></td>
+                    <td>
+                        <PlayIcon color="#035720" hoverColor="#0bb847" size="12" onClickEvent={()=>onPlay(app.path, app.port)}/>
+                        <StopIcon color="#a83d4d" hoverColor="#ff0328" size="12" onClickEvent={()=>onStop(app.port)}/>
+                    </td>
                     <td>{app.name}</td>
                     <td>{app.port}</td>
                 </tr>

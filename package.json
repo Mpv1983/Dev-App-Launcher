@@ -17,6 +17,9 @@
     "email": "46942529+Mpv1983@users.noreply.github.com"
   },
   "license": "MIT",
+  "browser": {
+    "child_process": false
+  },
   "devDependencies": {
     "@babel/core": "^7.23.6",
     "@babel/preset-react": "^7.23.3",

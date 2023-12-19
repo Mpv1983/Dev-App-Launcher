@@ -9,17 +9,19 @@ export default function ManageApp(props) {
 
     const [port, SetPort] = useState(0);
     const [appName, SetAppName] = useState('');
+    const [path, SetPath] = useState('');
     const { serviceProvider } = useContext(ServiceProviderContext);
-    var file = {name:'', path:'', lastModified:0, lastModifiedDate:{}, size:0, type:''};
     let navigate = useNavigate();
     
-    function handleFileSelected(fileObject){
-        file = fileObject;
+    // file : {name:'', path:'', lastModified:0, lastModifiedDate:{}, size:0, type:''};
+    function handleFileSelected(file){
         SetAppName(file.name);
+        SetPath(file.path);
+        SetPort(file.port);
     }
 
     function saveApplication(){
-        serviceProvider.configurationService.addApplication({port:port, name:appName});
+        serviceProvider.configurationService.addApplication({port:port, name:appName, path:path});
         navigate("/");
     }
 

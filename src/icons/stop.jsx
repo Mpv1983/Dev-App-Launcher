@@ -3,13 +3,13 @@ import BaseIcon from './_icon-base.jsx';
 
 //Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
         
-const PlayIcon = (props) => {
+const StopIcon = (props) => {
     const viewBox = "0 0 448 512";
-    const d = "M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z";
+    const d = "M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48z";
     return (
         <BaseIcon d={d} viewBox={viewBox} color={props.color} hoverColor={props.hoverColor} size={props.size} onClickEvent={props.onClickEvent}/>
     )
 };
 
-export default PlayIcon;
+export default StopIcon;
 
