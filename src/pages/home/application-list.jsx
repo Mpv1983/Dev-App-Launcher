@@ -7,20 +7,28 @@ export default function ApplicationList(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
     var apps = serviceProvider.configurationService.apps;
-    var appServiceRunner = serviceProvider.appRunnerService;
+    //var appServiceRunner = serviceProvider.appRunnerService;
     
     function onPlay(path, port){
         console.log('play',path, port);
 
 
-          window.myAPI.serveAppRunnerService({path, port})
-          .then((runner) => {
-            console.log(runner);
-          });
+        window.myAPI.startDotNetApp({path, port})
+        .then(() => {
+            console.log('started');
+        });
     }
 
+    window.myAPI.subscribeToDotNetOutput((data) => {
+        console.log('Received data in renderer process:', data);
+      });
+
     function onStop(port){
-        console.log('play', port);
+        console.log('stop', port);
+        window.myAPI.stopDotNetApp({port})
+        .then((runner) => {
+            console.log(runner);
+        });
     }
 
     return <table>

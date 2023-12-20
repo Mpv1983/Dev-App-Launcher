@@ -3,9 +3,20 @@
 const { contextBridge, ipcRenderer  } = require('electron')
 
 contextBridge.exposeInMainWorld('myAPI', {
-  serveAppRunnerService: async (args) => {
+  startDotNetApp: async (args) => {
     console.log('preload', args.path, args.port);
 
-    return await ipcRenderer.invoke('serveAppRunnerService', args);
-  }
+    return await ipcRenderer.invoke('startDotNetApp', args);
+  },
+  stopDotNetApp: async (args) => {
+    console.log('preload', args.path, args.port);
+
+    return await ipcRenderer.invoke('stopDotNetApp', args);
+  },
+  subscribeToDotNetOutput: (callback) => {
+    ipcRenderer.on('publishDotNetOutput', (event, data) => {
+      callback(data);
+    });
+  },
 })
+

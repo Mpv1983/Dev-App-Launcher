@@ -3,8 +3,8 @@ const { version } = require('os');
 const path = require('path');
 
 
-import AppRunnerService from './services/AppRunnerService.js';
-const appRunnerService = new AppRunnerService();
+import AppRunnerInterface from './services/AppRunnerInterface.js';
+const appRunnerInterface= new AppRunnerInterface();
 
 
 
@@ -34,12 +34,20 @@ const createWindow = () => {
 };
 
 
-ipcMain.handle('serveAppRunnerService', async (event, args) => {
-  appRunnerService.startDotNetApp(args.path, args.port);
+ipcMain.handle('startDotNetApp', async (event, args) => {
+  appRunnerInterface.startDotNetApp(args.path, args.port, sender);
   return;
 });
 
+function sender(msg){
+  console.log('tempsenderLog', msg);
+  mainWindow.webContents.send('publishDotNetOutput', msg);
+}
 
+ipcMain.handle('stopDotNetApp', async (event, args) => {
+  appRunnerInterface.stopDotNetApp(args.port);
+  return;
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
