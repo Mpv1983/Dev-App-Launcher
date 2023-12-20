@@ -1,18 +1,28 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { version } = require('os');
 const path = require('path');
+
+
+import AppRunnerService from './services/AppRunnerService.js';
+const appRunnerService = new AppRunnerService();
+
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let mainWindow;
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      contextIsolation: true,
+      nodeIntegration: true // Ensure node integration is enabled
     },
   });
 
@@ -22,6 +32,14 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
+
+ipcMain.handle('serveAppRunnerService', async (event, args) => {
+  appRunnerService.startDotNetApp(args.path, args.port);
+  return;
+});
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -11,6 +11,12 @@ export default function ApplicationList(props) {
     
     function onPlay(path, port){
         console.log('play',path, port);
+
+
+          window.myAPI.serveAppRunnerService({path, port})
+          .then((runner) => {
+            console.log(runner);
+          });
     }
 
     function onStop(port){

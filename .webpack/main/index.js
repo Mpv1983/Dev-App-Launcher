@@ -821,6 +821,50 @@ function plural(ms, n, name) {
 
 /***/ }),
 
+/***/ "./src/services/AppRunnerService.js":
+/*!******************************************!*\
+  !*** ./src/services/AppRunnerService.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AppRunnerService)
+/* harmony export */ });
+const exec = (__webpack_require__(/*! child_process */ "child_process").exec);
+class AppRunnerService {
+  constructor() {
+    this.dotnetProcess = null;
+  }
+  startDotNetApp(projectPath, portNumber) {
+    if (!projectPath || !portNumber) {
+      console.error('Please provide both the path/name of the .NET project and the port number.');
+      return;
+    }
+    this.dotnetProcess = exec(`dotnet run --project ${projectPath} --urls http://localhost:${portNumber}`);
+    this.dotnetProcess.stdout.on('data', data => {
+      console.log(`.NET app stdout: ${data}`);
+    });
+    this.dotnetProcess.stderr.on('data', data => {
+      console.error(`.NET app stderr: ${data}`);
+    });
+    this.dotnetProcess.on('close', code => {
+      console.log(`.NET app process exited with code ${code}`);
+    });
+  }
+  stopDotNetApp() {
+    if (this.dotnetProcess) {
+      this.dotnetProcess.kill();
+      console.log('.NET app process stopped.');
+    } else {
+      console.log('No running .NET app process found.');
+    }
+  }
+}
+
+/***/ }),
+
 /***/ "child_process":
 /*!********************************!*\
   !*** external "child_process" ***!
@@ -862,6 +906,17 @@ module.exports = require("fs");
 
 "use strict";
 module.exports = require("net");
+
+/***/ }),
+
+/***/ "os":
+/*!*********************!*\
+  !*** external "os" ***!
+  \*********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");
 
 /***/ }),
 
@@ -925,34 +980,74 @@ module.exports = require("util");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __webpack_require__ !== 'undefined') __webpack_require__.ab = __dirname + "/native_modules/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!*********************!*\
   !*** ./src/main.js ***!
   \*********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _services_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./services/AppRunnerService.js */ "./src/services/AppRunnerService.js");
 const {
   app,
-  BrowserWindow
+  BrowserWindow,
+  ipcMain
 } = __webpack_require__(/*! electron */ "electron");
+const {
+  version
+} = __webpack_require__(/*! os */ "os");
 const path = __webpack_require__(/*! path */ "path");
+
+const appRunnerService = new _services_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (__webpack_require__(/*! electron-squirrel-startup */ "./node_modules/electron-squirrel-startup/index.js")) {
   app.quit();
 }
+let mainWindow;
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: 'D:\\Repos\\Dev-App-Launcher\\.webpack\\renderer\\main_window\\preload.js'
+      preload: 'D:\\Repos\\Dev-App-Launcher\\.webpack\\renderer\\main_window\\preload.js',
+      contextIsolation: true,
+      nodeIntegration: true // Ensure node integration is enabled
     }
   });
 
@@ -962,6 +1057,10 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+ipcMain.handle('serveAppRunnerService', async (event, args) => {
+  appRunnerService.startDotNetApp(args.path, args.port);
+  return;
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
