@@ -858,15 +858,18 @@ const exec = (__webpack_require__(/*! child_process */ "child_process").exec);
 const execSync = (__webpack_require__(/*! child_process */ "child_process").execSync);
 class AppRunnerService {
   constructor() {}
-  startDotNetApp(projectPath, portNumber, publishDotNetOutput) {
-    if (!projectPath || !portNumber) {
+  startDotNetApp(app, publishDotNetOutput) {
+    if (!app.path || !app.port) {
       console.error('Please provide both the path/name of the .NET project and the port number.');
       return;
     }
-    var dotnetProcess = exec(`dotnet run --project ${projectPath} --urls http://localhost:${portNumber}`);
+    var dotnetProcess = exec(`dotnet run --project ${app.path} --urls http://localhost:${app.port}`);
     dotnetProcess.stdout.on('data', data => {
       const dataToSend = {
-        message: data
+        message: {
+          data: data,
+          port: app.port
+        }
       };
       publishDotNetOutput(dataToSend);
       console.log(`.NET app stdout: ${data}`);
@@ -878,7 +881,7 @@ class AppRunnerService {
       console.log(`.NET app process exited with code ${code}`);
     });
   }
-  async stopDotNetApp(app) {
+  stopDotNetApp(app) {
     var pid = this.getProcessId(app);
     if (pid != undefined) {
       exec(`taskkill /F /PID ${pid}`);
@@ -1115,7 +1118,7 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 };
 ipcMain.handle('startDotNetApp', async (event, args) => {
-  appRunnerService.startDotNetApp(args.path, args.port, sender);
+  appRunnerService.startDotNetApp(args.app, sender);
   return;
 });
 function sender(msg) {

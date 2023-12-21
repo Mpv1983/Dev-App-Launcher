@@ -1,12 +1,12 @@
 import React, { createContext } from 'react';
-import ConfigurationService from '../services/renderer/ConfigurationService.jsx';
+import AppManagerService from '../services/renderer/AppManagerService.jsx';
 
 const ServiceProviderContext = createContext();
 
 export const ServiceProviderContextProvider = ({ children }) => {
 
   var services = {
-    configurationService : new ConfigurationService()
+    appManagerService : new AppManagerService()
   };
 
   const value = {'serviceProvider': services};

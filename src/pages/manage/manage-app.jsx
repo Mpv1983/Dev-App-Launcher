@@ -22,7 +22,7 @@ export default function ManageApp(props) {
 
     function saveApplication(){
         var executable = appName.replace('csproj','exe');
-        serviceProvider.configurationService.addApplication({port:port, name:appName, path:path, executable:executable});
+        serviceProvider.appManagerService.addApplication({port:port, name:appName, path:path, executable:executable});
         navigate("/");
     }
 

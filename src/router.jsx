@@ -4,6 +4,7 @@ import ConfigurationIndexPage from './pages/manage/configure-index.jsx'
 import ManageApp from './pages/manage/manage-app.jsx'
 import HomePage from './pages/home/home.jsx';
 import Layout from './layout/layout.jsx';
+import LogViewer from './pages/log-viewer/log-viewer-index.jsx';
 
 export default function AppRouter(props) {
     return <HashRouter>
@@ -15,6 +16,9 @@ export default function AppRouter(props) {
                 <Route path="index" element={<ConfigurationIndexPage />} />
                 <Route path="manage-app" element={<ManageApp />} />
             </Route>
+            <Route path="/log-viewer" element={<Layout />}>
+                <Route path=":port" element={<LogViewer />} />
+            </Route>
         </Routes>
     </HashRouter>;
-  }
+}

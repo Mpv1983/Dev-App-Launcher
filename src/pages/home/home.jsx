@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function HomePage(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
-    var apps = serviceProvider.configurationService.apps;
+    var apps = serviceProvider.appManagerService.apps;
     
     return <div>
         <h1>Dev App Launcher</h1>
