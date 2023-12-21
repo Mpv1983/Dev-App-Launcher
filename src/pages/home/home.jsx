@@ -7,7 +7,7 @@ export default function HomePage(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
     var apps = serviceProvider.configurationService.apps;
-
+    
     return <div>
         <h1>Dev App Launcher</h1>
         

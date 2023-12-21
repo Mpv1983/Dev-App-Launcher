@@ -1,1 +1,0 @@
-All services are provided to components via the context ServiceProviderContext

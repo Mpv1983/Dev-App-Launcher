@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
-import ConfigurationService from '../services/ConfigurationService.jsx';
+import React, { createContext } from 'react';
+import ConfigurationService from '../services/renderer/ConfigurationService.jsx';
 
 const ServiceProviderContext = createContext();
 
