@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
+import LogFileIcon from '../../icons/log-file.jsx';
 
 export default function ApplicationList(props) {
 
@@ -19,17 +20,21 @@ export default function ApplicationList(props) {
         });
     }
 
-    window.myAPI.subscribeToDotNetOutput((data) => {
-        console.log('Received data in renderer process:', data);
-      });
-
-    function onStop(port){
-        console.log('stop', port);
-        window.myAPI.stopDotNetApp({port})
+    function onStop(app){
+        window.myAPI.stopDotNetApp({app})
         .then((runner) => {
             console.log(runner);
         });
     }
+
+    function onLogs(){
+
+    }
+
+    // this should get moved to the logger
+    window.myAPI.subscribeToDotNetOutput((data) => {
+        console.log('Received data in renderer process:', data);
+      });
 
     return <table>
                 <thead>
@@ -45,7 +50,8 @@ export default function ApplicationList(props) {
                 <tr key={app.port}>
                     <td>
                         <PlayIcon color="#035720" hoverColor="#0bb847" size="12" onClickEvent={()=>onPlay(app.path, app.port)}/>
-                        <StopIcon color="#a83d4d" hoverColor="#ff0328" size="12" onClickEvent={()=>onStop(app.port)}/>
+                        <StopIcon color="#a83d4d" hoverColor="#ff0328" size="12" onClickEvent={()=>onStop(app)}/>
+                        <LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" onClickEvent={()=>onLogs()}/>
                     </td>
                     <td>{app.name}</td>
                     <td>{app.port}</td>

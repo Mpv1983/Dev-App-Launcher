@@ -4,5 +4,6 @@ export default class AppConfig{
         this.name = '';
         this.path = '';
         this.port = 0;
+        this.executable = '';
     }
 }

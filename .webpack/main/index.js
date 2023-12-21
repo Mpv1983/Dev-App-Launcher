@@ -821,10 +821,30 @@ function plural(ms, n, name) {
 
 /***/ }),
 
-/***/ "./src/services/AppRunnerService.js":
-/*!******************************************!*\
-  !*** ./src/services/AppRunnerService.js ***!
-  \******************************************/
+/***/ "./src/models/response.js":
+/*!********************************!*\
+  !*** ./src/models/response.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ResponseModel)
+/* harmony export */ });
+class ResponseModel {
+  constructor(isSuccess, result) {
+    this.isSuccess = isSuccess; // boolean
+    this.result = result; // any
+  }
+}
+
+/***/ }),
+
+/***/ "./src/services/main/AppRunnerService.js":
+/*!***********************************************!*\
+  !*** ./src/services/main/AppRunnerService.js ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -832,34 +852,71 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AppRunnerService)
 /* harmony export */ });
+/* harmony import */ var _models_response_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../models/response.js */ "./src/models/response.js");
+
 const exec = (__webpack_require__(/*! child_process */ "child_process").exec);
+const execSync = (__webpack_require__(/*! child_process */ "child_process").execSync);
 class AppRunnerService {
-  constructor() {
-    this.dotnetProcess = null;
-  }
-  startDotNetApp(projectPath, portNumber) {
+  constructor() {}
+  startDotNetApp(projectPath, portNumber, publishDotNetOutput) {
     if (!projectPath || !portNumber) {
       console.error('Please provide both the path/name of the .NET project and the port number.');
       return;
     }
-    this.dotnetProcess = exec(`dotnet run --project ${projectPath} --urls http://localhost:${portNumber}`);
-    this.dotnetProcess.stdout.on('data', data => {
+    var dotnetProcess = exec(`dotnet run --project ${projectPath} --urls http://localhost:${portNumber}`);
+    dotnetProcess.stdout.on('data', data => {
+      const dataToSend = {
+        message: data
+      };
+      publishDotNetOutput(dataToSend);
       console.log(`.NET app stdout: ${data}`);
     });
-    this.dotnetProcess.stderr.on('data', data => {
+    dotnetProcess.stderr.on('data', data => {
       console.error(`.NET app stderr: ${data}`);
     });
-    this.dotnetProcess.on('close', code => {
+    dotnetProcess.on('close', code => {
       console.log(`.NET app process exited with code ${code}`);
     });
   }
-  stopDotNetApp() {
-    if (this.dotnetProcess) {
-      this.dotnetProcess.kill();
-      console.log('.NET app process stopped.');
-    } else {
-      console.log('No running .NET app process found.');
+  async stopDotNetApp(app) {
+    var pid = this.getProcessId(app);
+    if (pid != undefined) {
+      exec(`taskkill /F /PID ${pid}`);
+      console.log(`.NET app ${app.name} stopped.`);
     }
+    //  TODO: handle process not found, this might be because the executable name does not match the process running
+  }
+  getProcessId(app) {
+    var buffer = execSync(`netstat -aon | findstr :${app.port}`, {
+      timeout: 1000
+    });
+    var netstatResults = buffer.toString().split('\n');
+    var processId = undefined;
+    for (const item of netstatResults) {
+      var netstats = item.split(' ');
+      var pid = netstats[netstats.length - 1];
+      var executable = this.getExecutableNameByPID(pid);
+      if (executable == app.executable) {
+        processId = pid;
+        break;
+      }
+    }
+    ;
+    return processId;
+  }
+  getExecutableNameByPID(pid) {
+    try {
+      const output = execSync(`tasklist /FI "PID eq ${pid}" /FO CSV`);
+      const lines = output.toString().split('\n');
+      if (lines.length > 1) {
+        const info = lines[1].split('","');
+        return info[0].replace('"', ''); // Extracting the executable name
+      }
+      console.log('Process not found');
+    } catch (error) {
+      console.log('Error occurred', error);
+    }
+    return undefined;
   }
 }
 
@@ -1021,7 +1078,7 @@ var __webpack_exports__ = {};
   !*** ./src/main.js ***!
   \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _services_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./services/AppRunnerService.js */ "./src/services/AppRunnerService.js");
+/* harmony import */ var _services_main_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./services/main/AppRunnerService.js */ "./src/services/main/AppRunnerService.js");
 const {
   app,
   BrowserWindow,
@@ -1032,7 +1089,7 @@ const {
 } = __webpack_require__(/*! os */ "os");
 const path = __webpack_require__(/*! path */ "path");
 
-const appRunnerService = new _services_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+const appRunnerService = new _services_main_AppRunnerService_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (__webpack_require__(/*! electron-squirrel-startup */ "./node_modules/electron-squirrel-startup/index.js")) {
@@ -1057,8 +1114,15 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
-ipcMain.handle('serveAppRunnerService', async (event, args) => {
-  appRunnerService.startDotNetApp(args.path, args.port);
+ipcMain.handle('startDotNetApp', async (event, args) => {
+  appRunnerService.startDotNetApp(args.path, args.port, sender);
+  return;
+});
+function sender(msg) {
+  mainWindow.webContents.send('publishDotNetOutput', msg);
+}
+ipcMain.handle('stopDotNetApp', async (event, args) => {
+  await appRunnerService.stopDotNetApp(args.app);
   return;
 });
 

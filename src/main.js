@@ -3,8 +3,8 @@ const { version } = require('os');
 const path = require('path');
 
 
-import AppRunnerInterface from './services/AppRunnerInterface.js';
-const appRunnerInterface= new AppRunnerInterface();
+import AppRunnerService from './services/main/AppRunnerService.js';
+const appRunnerService= new AppRunnerService();
 
 
 
@@ -35,17 +35,16 @@ const createWindow = () => {
 
 
 ipcMain.handle('startDotNetApp', async (event, args) => {
-  appRunnerInterface.startDotNetApp(args.path, args.port, sender);
+  appRunnerService.startDotNetApp(args.path, args.port, sender);
   return;
 });
 
 function sender(msg){
-  console.log('tempsenderLog', msg);
   mainWindow.webContents.send('publishDotNetOutput', msg);
 }
 
 ipcMain.handle('stopDotNetApp', async (event, args) => {
-  appRunnerInterface.stopDotNetApp(args.port);
+  await appRunnerService.stopDotNetApp(args.app);
   return;
 });
 
