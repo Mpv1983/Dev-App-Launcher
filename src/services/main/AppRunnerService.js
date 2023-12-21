@@ -7,17 +7,17 @@ export default class AppRunnerService {
 
   }
 
-  startDotNetApp(projectPath, portNumber, publishDotNetOutput) {
+  startDotNetApp(app, publishDotNetOutput) {
 
-    if (!projectPath || !portNumber) {
+    if (!app.path || !app.port) {
       console.error('Please provide both the path/name of the .NET project and the port number.');
       return;
     }
 
-    var dotnetProcess = exec(`dotnet run --project ${projectPath} --urls http://localhost:${portNumber}`);
+    var dotnetProcess = exec(`dotnet run --project ${app.path} --urls http://localhost:${app.port}`);
 
     dotnetProcess.stdout.on('data', (data) => {
-      const dataToSend = { message: data };
+      const dataToSend = { message: { data:data, port:app.port } };
       publishDotNetOutput(dataToSend);
       console.log(`.NET app stdout: ${data}`);
     });
@@ -31,7 +31,7 @@ export default class AppRunnerService {
     });
   }
 
-  async stopDotNetApp(app) {
+  stopDotNetApp(app) {
 
     var pid = this.getProcessId(app)
 

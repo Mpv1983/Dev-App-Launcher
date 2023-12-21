@@ -35,7 +35,7 @@ const createWindow = () => {
 
 
 ipcMain.handle('startDotNetApp', async (event, args) => {
-  appRunnerService.startDotNetApp(args.path, args.port, sender);
+  appRunnerService.startDotNetApp(args.app, sender);
   return;
 });
 

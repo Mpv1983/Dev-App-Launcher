@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
@@ -7,14 +8,11 @@ import LogFileIcon from '../../icons/log-file.jsx';
 export default function ApplicationList(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
-    var apps = serviceProvider.configurationService.apps;
-    //var appServiceRunner = serviceProvider.appRunnerService;
+    let navigate = useNavigate();
+    var apps = serviceProvider.appManagerService.apps;
     
-    function onPlay(path, port){
-        console.log('play',path, port);
-
-
-        window.myAPI.startDotNetApp({path, port})
+    function onPlay(app){
+        window.myAPI.startDotNetApp({app})
         .then(() => {
             console.log('started');
         });
@@ -27,14 +25,15 @@ export default function ApplicationList(props) {
         });
     }
 
-    function onLogs(){
-
+    function onLogs(app){
+        navigate(`/log-viewer/${app.port}`);
+        console.log('logs', app.log);
     }
 
     // this should get moved to the logger
     window.myAPI.subscribeToDotNetOutput((data) => {
-        console.log('Received data in renderer process:', data);
-      });
+        serviceProvider.appManagerService.logOutput(data);
+    });
 
     return <table>
                 <thead>
@@ -42,6 +41,7 @@ export default function ApplicationList(props) {
                         <th></th>
                         <th>Application</th>
                         <th>Port</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -49,12 +49,14 @@ export default function ApplicationList(props) {
             {apps.map((app) => (
                 <tr key={app.port}>
                     <td>
-                        <PlayIcon color="#035720" hoverColor="#0bb847" size="12" onClickEvent={()=>onPlay(app.path, app.port)}/>
-                        <StopIcon color="#a83d4d" hoverColor="#ff0328" size="12" onClickEvent={()=>onStop(app)}/>
-                        <LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" onClickEvent={()=>onLogs()}/>
+                        <PlayIcon color="#035720" hoverColor="#0bb847" size="14" onClickEvent={()=>onPlay(app)}/>
+                        <StopIcon color="#a83d4d" hoverColor="#ff0328" size="14" onClickEvent={()=>onStop(app)}/>
                     </td>
                     <td>{app.name}</td>
                     <td>{app.port}</td>
+                    <td>
+                        <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" onClickEvent={()=>onLogs(app)}/> Logs</span>
+                    </td>
                 </tr>
             ))}
             </tbody>
