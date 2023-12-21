@@ -15,7 +15,7 @@ export default function LogViewer(props) {
             <h1>{app.name} Logs</h1>
             <hr/>
 
-            <table>
+            <table className='logView'>
                 <thead>
                     <tr>
                         <th></th>
