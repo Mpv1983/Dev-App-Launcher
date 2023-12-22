@@ -853,12 +853,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ AppRunnerService)
 /* harmony export */ });
 /* harmony import */ var _models_response_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../models/response.js */ "./src/models/response.js");
+/* harmony import */ var _utils_limitedRetry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/limitedRetry.js */ "./src/utils/limitedRetry.js");
+
 
 const exec = (__webpack_require__(/*! child_process */ "child_process").exec);
 const execSync = (__webpack_require__(/*! child_process */ "child_process").execSync);
 class AppRunnerService {
   constructor() {}
-  startDotNetApp(app, publishDotNetOutput) {
+  startDotNetApp(app, eventPublisher) {
     if (!app.path || !app.port) {
       console.error('Please provide both the path/name of the .NET project and the port number.');
       return;
@@ -871,7 +873,7 @@ class AppRunnerService {
           port: app.port
         }
       };
-      publishDotNetOutput(dataToSend);
+      eventPublisher('publishDotNetOutput', dataToSend);
       console.log(`.NET app stdout: ${data}`);
     });
     dotnetProcess.stderr.on('data', data => {
@@ -880,14 +882,53 @@ class AppRunnerService {
     dotnetProcess.on('close', code => {
       console.log(`.NET app process exited with code ${code}`);
     });
+    (0,_utils_limitedRetry_js__WEBPACK_IMPORTED_MODULE_1__["default"])(10, 1000, () => {
+      var isAppRunning = this.checkIfAppRunning(app);
+      if (isAppRunning) {
+        eventPublisher('appEvent', {
+          port: app.port,
+          status: 'Running'
+        });
+        return true;
+      }
+      eventPublisher('appEvent', {
+        port: app.port,
+        status: 'Starting'
+      });
+      return false;
+    });
   }
-  stopDotNetApp(app) {
+  stopDotNetApp(app, eventPublisher) {
     var pid = this.getProcessId(app);
     if (pid != undefined) {
       exec(`taskkill /F /PID ${pid}`);
       console.log(`.NET app ${app.name} stopped.`);
     }
+
     //  TODO: handle process not found, this might be because the executable name does not match the process running
+
+    (0,_utils_limitedRetry_js__WEBPACK_IMPORTED_MODULE_1__["default"])(10, 1000, () => {
+      var isAppRunning = this.checkIfAppRunning(app);
+      if (!isAppRunning) {
+        eventPublisher('appEvent', {
+          port: app.port,
+          status: 'Stopped'
+        });
+        return true;
+      }
+      eventPublisher('appEvent', {
+        port: app.port,
+        status: 'Stopping'
+      });
+      return false;
+    });
+  }
+  checkIfAppRunning(app) {
+    var pid = this.getProcessId(app);
+    if (pid != undefined) {
+      return true;
+    }
+    return false;
   }
   getProcessId(app) {
     var buffer = execSync(`netstat -aon | findstr :${app.port}`, {
@@ -908,6 +949,9 @@ class AppRunnerService {
     return processId;
   }
   getExecutableNameByPID(pid) {
+    if (pid == undefined || pid == null || isNaN(pid)) {
+      return undefined;
+    }
     try {
       const output = execSync(`tasklist /FI "PID eq ${pid}" /FO CSV`);
       const lines = output.toString().split('\n');
@@ -921,6 +965,35 @@ class AppRunnerService {
     }
     return undefined;
   }
+}
+
+/***/ }),
+
+/***/ "./src/utils/limitedRetry.js":
+/*!***********************************!*\
+  !*** ./src/utils/limitedRetry.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ limitedRetry)
+/* harmony export */ });
+/**
+ * This will try a limited amount of time 
+ * @param {number} timesToTry - Number of times methodToTry should be executed.
+ * @param {number} interval - interval in milliseconds between tries.
+ * @param {function} methodToTry - Method to try an execute, must return a boolean to indicate if another retry is required.
+ */
+function limitedRetry(timesToTry, interval, methodToTry) {
+  console.log(`limitedRetry ${timesToTry} ${interval}`);
+  var outcome = methodToTry();
+  if (outcome == true || timesToTry < 1) {
+    return;
+  }
+  var remainingTimesToTry = timesToTry - 1;
+  setTimeout(() => limitedRetry(remainingTimesToTry, interval, methodToTry), interval);
 }
 
 /***/ }),
@@ -1121,12 +1194,15 @@ ipcMain.handle('startDotNetApp', async (event, args) => {
   appRunnerService.startDotNetApp(args.app, sender);
   return;
 });
-function sender(msg) {
-  mainWindow.webContents.send('publishDotNetOutput', msg);
+function sender(eventType, msg) {
+  mainWindow.webContents.send(eventType, msg);
 }
 ipcMain.handle('stopDotNetApp', async (event, args) => {
-  await appRunnerService.stopDotNetApp(args.app);
+  await appRunnerService.stopDotNetApp(args.app, sender);
   return;
+});
+ipcMain.handle('checkIfAppRunning', async (event, args) => {
+  return appRunnerService.checkIfAppRunning(args.app);
 });
 
 // This method will be called when Electron has finished

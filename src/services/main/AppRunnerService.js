@@ -1,4 +1,5 @@
 import ResponseModel from '../../models/response.js';
+import limitedRetry from '../../utils/limitedRetry.js'
 const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 
@@ -7,7 +8,7 @@ export default class AppRunnerService {
 
   }
 
-  startDotNetApp(app, publishDotNetOutput) {
+  startDotNetApp(app, eventPublisher) {
 
     if (!app.path || !app.port) {
       console.error('Please provide both the path/name of the .NET project and the port number.');
@@ -18,7 +19,7 @@ export default class AppRunnerService {
 
     dotnetProcess.stdout.on('data', (data) => {
       const dataToSend = { message: { data:data, port:app.port } };
-      publishDotNetOutput(dataToSend);
+      eventPublisher('publishDotNetOutput', dataToSend);
       console.log(`.NET app stdout: ${data}`);
     });
 
@@ -29,9 +30,22 @@ export default class AppRunnerService {
     dotnetProcess.on('close', (code) => {
       console.log(`.NET app process exited with code ${code}`);
     });
+
+    limitedRetry(10, 1000, ()=>{
+
+      var isAppRunning = this.checkIfAppRunning(app);
+
+      if(isAppRunning){
+        eventPublisher('appEvent', {port:app.port, status:'Running'});
+        return true;
+      }
+
+      eventPublisher('appEvent', {port:app.port, status:'Starting'});
+      return false;
+    });
   }
 
-  stopDotNetApp(app) {
+  stopDotNetApp(app, eventPublisher) {
 
     var pid = this.getProcessId(app)
 
@@ -40,8 +54,32 @@ export default class AppRunnerService {
       exec(`taskkill /F /PID ${pid}`);
       console.log(`.NET app ${app.name} stopped.`);
 
-    } 
+    }
+
     //  TODO: handle process not found, this might be because the executable name does not match the process running
+
+    limitedRetry(10, 1000, ()=>{
+
+      var isAppRunning = this.checkIfAppRunning(app);
+
+      if(!isAppRunning){
+        eventPublisher('appEvent', {port:app.port, status:'Stopped'});
+        return true;
+      }
+
+      eventPublisher('appEvent', {port:app.port, status:'Stopping'});
+      return false;
+    });
+  }
+
+  checkIfAppRunning(app){
+    var pid = this.getProcessId(app)
+
+    if (pid != undefined) {
+      return true;
+    } 
+
+    return false;
   }
 
   getProcessId(app) {
@@ -66,6 +104,10 @@ export default class AppRunnerService {
   }
 
   getExecutableNameByPID(pid) {
+
+    if(pid== undefined || pid == null || isNaN(pid)){
+      return undefined;
+    }
 
     try {
       const output = execSync(`tasklist /FI "PID eq ${pid}" /FO CSV`);
