@@ -39,13 +39,17 @@ ipcMain.handle('startDotNetApp', async (event, args) => {
   return;
 });
 
-function sender(msg){
-  mainWindow.webContents.send('publishDotNetOutput', msg);
+function sender(eventType, msg){
+  mainWindow.webContents.send(eventType, msg);
 }
 
 ipcMain.handle('stopDotNetApp', async (event, args) => {
-  await appRunnerService.stopDotNetApp(args.app);
+  await appRunnerService.stopDotNetApp(args.app, sender);
   return;
+});
+
+ipcMain.handle('checkIfAppRunning', async(event, args)=>{
+  return appRunnerService.checkIfAppRunning(args.app);
 });
 
 // This method will be called when Electron has finished

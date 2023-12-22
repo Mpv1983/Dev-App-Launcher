@@ -2,7 +2,7 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 const { contextBridge, ipcRenderer  } = require('electron')
 
-contextBridge.exposeInMainWorld('myAPI', {
+contextBridge.exposeInMainWorld('AppRunnerService', {
   startDotNetApp: async (args) => {
     return await ipcRenderer.invoke('startDotNetApp', args);
   },
@@ -14,5 +14,13 @@ contextBridge.exposeInMainWorld('myAPI', {
       callback(data);
     });
   },
+  subscribeToAppEvent: (callback) => {
+    ipcRenderer.on('appEvent', (event, data) => {
+      callback(data);
+    });
+  },
+  checkIfAppRunning: async (args) => {
+    return await ipcRenderer.invoke('checkIfAppRunning', args);
+  }
 })
 
