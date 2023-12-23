@@ -17,7 +17,6 @@ export default function ManageApp(props) {
     function handleFileSelected(file){
         SetAppName(file.name);
         SetPath(file.path);
-        SetPort(file.port);
     }
 
     function saveApplication(){
@@ -27,16 +26,27 @@ export default function ManageApp(props) {
     }
 
     return <div>
+
             <h1>Configure Application</h1>
             <hr/>
+            <div className='centered-container'>
 
-            <FilePickerField id="selectProjectFile" label="Select Project" fileExtension="csproj" onFileSelectedEvent={FileObject => handleFileSelected(FileObject)} />
 
-            <div>
-                <TextField label='App Name' value={appName} onChange={(e)=>handleChange(e, SetAppName)}/>
-                <TextField label='Port' value={port} onChange={(e)=>handleChange(e, SetPort)}/>
+                <div className='left-align-container'>
+                    <FilePickerField id="selectProjectFile" label="Select Project" fileExtension="csproj" onFileSelectedEvent={FileObject => handleFileSelected(FileObject)} />
+
+                    <div>
+                        <TextField label='App Name' value={appName} onChange={(e)=>handleChange(e, SetAppName)}/>
+                        <TextField label='Port' value={port} onChange={(e)=>handleChange(e, SetPort)}/>
+                    </div>
+                </div>
+
             </div>
 
-            <button onClick={saveApplication} type="button">Save</button>
+
+            <div className='centered-container'>
+                <button onClick={saveApplication} type="button" className='largeButton'>Save</button>
+            </div>
+            
         </div>;
 }
