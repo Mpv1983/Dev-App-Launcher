@@ -4,9 +4,10 @@ const path = require('path');
 
 
 import AppRunnerService from './services/main/AppRunnerService.js';
+import FileSystemService from './services/main/FileSystemService.js';
+
 const appRunnerService= new AppRunnerService();
-
-
+const fileSystemService= new FileSystemService();
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -33,7 +34,6 @@ const createWindow = () => {
   mainWindow.webContents.openDevTools();
 };
 
-
 ipcMain.handle('startDotNetApp', async (event, args) => {
   appRunnerService.startDotNetApp(args.app, sender);
   return;
@@ -50,6 +50,10 @@ ipcMain.handle('stopDotNetApp', async (event, args) => {
 
 ipcMain.handle('checkIfAppRunning', async(event, args)=>{
   return appRunnerService.checkIfAppRunning(args.app);
+});
+
+ipcMain.handle('saveJsonFile', async(event, args)=>{
+  return fileSystemService.saveJsonFile(args.fileName, args.json);
 });
 
 // This method will be called when Electron has finished

@@ -21,6 +21,10 @@ export default class AppManagerService{
 
     addApplication(app){
         this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, log:[], status:'Unknown' });
+        window.FileSystemService.saveJsonFile({fileName: 'configuredApps', json:this.apps})
+        .then(() => {
+            //
+        });
         this.updateAppStatus(app);// Get initial app status
     }
 
