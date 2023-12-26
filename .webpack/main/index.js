@@ -854,6 +854,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _models_response_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../models/response.js */ "./src/models/response.js");
 /* harmony import */ var _utils_limitedRetry_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../utils/limitedRetry.js */ "./src/utils/limitedRetry.js");
+/* harmony import */ var _utils_getDotNetRunString_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../utils/getDotNetRunString.js */ "./src/utils/getDotNetRunString.js");
+
 
 
 const exec = (__webpack_require__(/*! child_process */ "child_process").exec);
@@ -865,7 +867,7 @@ class AppRunnerService {
       console.error('Please provide both the path/name of the .NET project and the port number.');
       return;
     }
-    var dotnetProcess = exec(`dotnet run --project ${app.path} --urls http://localhost:${app.port}`);
+    var dotnetProcess = exec((0,_utils_getDotNetRunString_js__WEBPACK_IMPORTED_MODULE_2__["default"])(app.path, app.port));
     dotnetProcess.stdout.on('data', data => {
       const dataToSend = {
         message: {
@@ -965,6 +967,37 @@ class AppRunnerService {
     }
     return undefined;
   }
+}
+
+/***/ }),
+
+/***/ "./src/utils/getDotNetRunString.js":
+/*!*****************************************!*\
+  !*** ./src/utils/getDotNetRunString.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ getDotNetRunString)
+/* harmony export */ });
+/**
+ * Gets a string to run in commandline that will start the app
+ * @param {string} path - Path for csproj file to start.
+ * @param {number} port - Port to run the app on.
+ */
+function getDotNetRunString(path, port) {
+  var loggingAppSettings = '--Logging:LogLevel:Default=Debug ';
+  loggingAppSettings += '--Logging:Console:LogLevel:Default=Debug ';
+  loggingAppSettings += '--Logging:Console:FormatterName=json ';
+  loggingAppSettings += '--Logging:Console:FormatterOptions:SingleLine=true ';
+  loggingAppSettings += '--Logging:Console:FormatterOptions:IncludeScopes=true ';
+  loggingAppSettings += '--Logging:Console:FormatterOptions:TimestampFormat="HH:mm:ss " ';
+  loggingAppSettings += '--Logging:Console:FormatterOptions:UseUtcTimestamp=true ';
+  loggingAppSettings += '--Logging:Console:FormatterOptions:JsonWriterOptions:Indented=true';
+  var cmd = `dotnet run --project ${path} --urls http://localhost:${port} ${loggingAppSettings}`;
+  return cmd;
 }
 
 /***/ }),

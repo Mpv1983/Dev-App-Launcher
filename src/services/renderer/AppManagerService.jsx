@@ -1,5 +1,9 @@
-export default class AppManagerService{
+import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
 
+const LOG_EVENT = 'logEvent';
+const APP_EVENT = 'appEvent';
+
+export default class AppManagerService{
     constructor(){
         this.apps = [];
         this.eventSubscriber = [];
@@ -43,6 +47,12 @@ export default class AppManagerService{
         }); 
     }
 
+    /**
+     * This will register a subscriber to events
+     * @param {string} eventType - Event type subscribing too, possible values are (logEvent, appEvent).
+     * @param {object} app - app event is related to.
+     * @param {function} callback - method to call on subscriber.
+     */
     addSubscriber(eventType, app, callback){
         const index = this.eventSubscriber.findIndex(subscriber => subscriber.port == app.port && subscriber.eventType == eventType);
         if(index > -1){
@@ -71,11 +81,22 @@ export default class AppManagerService{
     //  Will log the data to the appropriate app
     logOutput(data){
         const index = this.apps.findIndex(app => app.port == data.message.port);
-        var lineNumber = this.apps[index].log.length + 1;
-        this.apps[index].log.push({ lineNumber: lineNumber, message: data.message.data });
-        this.pushEventToSubscriber('logEvent', data.message.port, data.message.port );
+        var jsonArray = parseDotNetOutputToJson(data.message.data);
+
+        jsonArray.forEach(json=>{
+            var lineNumber = this.apps[index].log.length + 1;
+            var logEntry = { lineNumber: lineNumber, json: json };
+            this.apps[index].log.push(logEntry);
+            this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
+        });
+
     }
 
+    /**
+     * This will return an App by its port number
+     * @param {number} port - Port for app to retrieve.
+     * @param {boolean} clone - should this method return a clone of the app (default is false)
+     */
     getAppByPort(port, clone = false){
         const index = this.apps.findIndex(app => app.port == port);
 
@@ -99,7 +120,7 @@ export default class AppManagerService{
                 var appToUpdate = this.getAppByPort(app.port);
                 appToUpdate.status = newStatus;
             }
-            this.pushEventToSubscriber('appEvent', app.port, null);// No data needed, just trigger to refresh
+            this.pushEventToSubscriber(APP_EVENT, app.port, null);// No data needed, just trigger to refresh
         });
     }
 
@@ -112,6 +133,6 @@ export default class AppManagerService{
     handleAppEvent(eventData){
         var app = this.getAppByPort(eventData.port);
         app.status = eventData.status;
-        this.pushEventToSubscriber('appEvent', app.port, null);// No data needed, just trigger to refresh
+        this.pushEventToSubscriber(APP_EVENT, app.port, null);// No data needed, just trigger to refresh
     }
 }
