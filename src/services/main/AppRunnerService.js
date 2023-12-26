@@ -1,5 +1,6 @@
 import ResponseModel from '../../models/response.js';
 import limitedRetry from '../../utils/limitedRetry.js'
+import getDotNetRunString from '../../utils/getDotNetRunString.js'
 const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 
@@ -15,7 +16,7 @@ export default class AppRunnerService {
       return;
     }
 
-    var dotnetProcess = exec(`dotnet run --project ${app.path} --urls http://localhost:${app.port}`);
+    var dotnetProcess = exec(getDotNetRunString(app.path, app.port));
 
     dotnetProcess.stdout.on('data', (data) => {
       const dataToSend = { message: { data:data, port:app.port } };

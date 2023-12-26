@@ -3,3 +3,19 @@
     font-family: 'Courier New', monospace;
     text-align: left;
 }
+
+.Error{
+    color: red;
+}
+
+.Warning{
+    color: orange;
+}
+
+.Console{
+    color: blue;
+}
+
+.Information{
+    color: aqua;
+}

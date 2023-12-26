@@ -1,3 +1,4 @@
+import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
 
 const LOG_EVENT = 'logEvent';
 const APP_EVENT = 'appEvent';
@@ -80,10 +81,15 @@ export default class AppManagerService{
     //  Will log the data to the appropriate app
     logOutput(data){
         const index = this.apps.findIndex(app => app.port == data.message.port);
-        var lineNumber = this.apps[index].log.length + 1;
-        var logEntry = { lineNumber: lineNumber, message: data.message.data };
-        this.apps[index].log.push(logEntry);
-        this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
+        var jsonArray = parseDotNetOutputToJson(data.message.data);
+
+        jsonArray.forEach(json=>{
+            var lineNumber = this.apps[index].log.length + 1;
+            var logEntry = { lineNumber: lineNumber, json: json };
+            this.apps[index].log.push(logEntry);
+            this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
+        });
+
     }
 
     /**

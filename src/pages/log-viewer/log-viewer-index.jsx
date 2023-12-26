@@ -33,6 +33,8 @@ export default function LogViewer(props) {
                 <thead>
                     <tr>
                         <th></th>
+                        <th>Time</th>
+                        <th>Level</th>
                         <th>Message</th>
 
                     </tr>
@@ -41,8 +43,10 @@ export default function LogViewer(props) {
                 <tbody>
                 {logs.map((line) => (
                     <tr key={line.lineNumber}>
-                        <th>{line.lineNumber}</th>
-                        <th>{line.message}</th>
+                        <td>{line.lineNumber}</td>
+                        <td>{line.json.Timestamp}</td>
+                        <td className={line.json.LogLevel}>{line.json.LogLevel}</td>
+                        <td>{line.json.Message}</td>
                     </tr>
                 ))}
                 </tbody>
