@@ -2,12 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { version } = require('os');
 const path = require('path');
 
-
-import AppRunnerService from './services/main/AppRunnerService.js';
-import FileSystemService from './services/main/FileSystemService.js';
-
-const appRunnerService= new AppRunnerService();
-const fileSystemService= new FileSystemService();
+import registerServices from './services/main/RegisterServices.js';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -15,6 +10,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow;
+let services;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -32,29 +28,10 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  services = registerServices(ipcMain, mainWindow);
 };
 
-ipcMain.handle('startDotNetApp', async (event, args) => {
-  appRunnerService.startDotNetApp(args.app, sender);
-  return;
-});
-
-function sender(eventType, msg){
-  mainWindow.webContents.send(eventType, msg);
-}
-
-ipcMain.handle('stopDotNetApp', async (event, args) => {
-  await appRunnerService.stopDotNetApp(args.app, sender);
-  return;
-});
-
-ipcMain.handle('checkIfAppRunning', async(event, args)=>{
-  return appRunnerService.checkIfAppRunning(args.app);
-});
-
-ipcMain.handle('saveJsonFile', async(event, args)=>{
-  return fileSystemService.saveJsonFile(args.fileName, args.json);
-});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

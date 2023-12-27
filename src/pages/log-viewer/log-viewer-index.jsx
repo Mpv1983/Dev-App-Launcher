@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
+import EyeIcon from '../../icons/eye.jsx'
 import './log-viewer-index.css';
 
 export default function LogViewer(props) {
