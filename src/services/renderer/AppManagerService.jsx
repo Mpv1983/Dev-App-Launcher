@@ -7,7 +7,14 @@ export default class AppManagerService{
     constructor(){
         this.apps = [];
         this.eventSubscriber = [];
-        this.updateAllAppStatus();// Get initial app status
+
+        window.FileSystemService.readJsonFile({fileName: 'configuredApps'})
+        .then((configuredApps) => {
+            if(configuredApps != undefined){
+                this.apps = configuredApps;
+            }
+            this.updateAllAppStatus();// Get initial app status
+        });
 
         // Subscribe to events from AppRunnerService
         window.AppRunnerService.subscribeToDotNetOutput((data) => {
