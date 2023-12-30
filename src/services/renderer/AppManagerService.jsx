@@ -7,14 +7,7 @@ export default class AppManagerService{
     constructor(){
         this.apps = [];
         this.eventSubscriber = [];
-
-        window.FileSystemService.readJsonFile({fileName: 'configuredApps'})
-        .then((configuredApps) => {
-            if(configuredApps != undefined){
-                this.apps = configuredApps;
-            }
-            this.updateAllAppStatus();// Get initial app status
-        });
+        this.hasCheckedForConfigFile = false;
 
         // Subscribe to events from AppRunnerService
         window.AppRunnerService.subscribeToDotNetOutput((data) => {
@@ -26,6 +19,28 @@ export default class AppManagerService{
         });
     }
 
+    /**
+     * Checks the file system for existing configuration
+     * @returns {boolean} true if there are configured apps
+     */
+    async retrieveConfig(){
+        var hasApps = await window.FileSystemService.readJsonFile({fileName: 'configuredApps'})
+        .then((configuredApps) => {
+            if(configuredApps != undefined){
+                this.apps = configuredApps;
+                this.updateAllAppStatus();// Get initial app status
+            }
+            this.hasCheckedForConfigFile = true;
+            return this.apps.length > 0;
+        });
+
+        return hasApps;
+    }
+
+    /**
+     * Adds an application to the configuration. It will be saved to a json file
+     * @param {object} app - App configuration to be added
+     */
     addApplication(app){
         this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, log:[], status:'Unknown' });
         window.FileSystemService.saveJsonFile({fileName: 'configuredApps', json:this.apps})
