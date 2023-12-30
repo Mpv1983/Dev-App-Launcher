@@ -1,4 +1,5 @@
 import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
+import AppConfig from '../../models/app.js'
 
 const LOG_EVENT = 'logEvent';
 const APP_EVENT = 'appEvent';
@@ -43,7 +44,14 @@ export default class AppManagerService{
      */
     addApplication(app){
         this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, log:[], status:'Unknown' });
-        window.FileSystemService.saveJsonFile({fileName: 'configuredApps', json:this.apps})
+
+        var appConfigs = [];
+
+        this.apps.forEach(app => {
+            appConfigs.push(new AppConfig(app));
+        })
+
+        window.FileSystemService.saveJsonFile({fileName: 'configuredApps', json:appConfigs})
         .then(() => {
             //
         });
