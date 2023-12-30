@@ -1,9 +1,18 @@
 // This class contains config for an app to be launched
 export default class AppConfig{
-    constructor(){
-        this.name = '';
-        this.path = '';
-        this.port = 0;
-        this.executable = '';
+    constructor(app){
+        if(app == undefined){
+            this.name = '';
+            this.path = '';
+            this.port = 0;
+            this.executable = '';
+        }
+        else{
+            this.name = app.name;
+            this.path = app.path;
+            this.port = app.port;
+            this.executable = app.executable;
+        }
+
     }
 }

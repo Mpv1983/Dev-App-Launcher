@@ -24,3 +24,11 @@ contextBridge.exposeInMainWorld('AppRunnerService', {
   }
 })
 
+contextBridge.exposeInMainWorld('FileSystemService', {
+  saveJsonFile: async (args) => {
+    return await ipcRenderer.invoke('saveJsonFile', args);
+  },
+  readJsonFile: async (args) => {
+    return await ipcRenderer.invoke('readJsonFile', args);
+  }
+})
