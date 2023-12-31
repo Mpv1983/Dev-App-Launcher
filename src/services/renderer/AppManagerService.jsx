@@ -43,7 +43,7 @@ export default class AppManagerService{
      * @param {object} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, log:[], status:'Unknown' });
+        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, log:[], status:'Unknown' });
 
         var appConfigs = [];
 
