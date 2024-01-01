@@ -1,0 +1,7 @@
+.action-cell{
+    display:'grid'
+}
+
+.action-cell span{
+    margin: 2px;
+}

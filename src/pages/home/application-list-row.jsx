@@ -6,6 +6,8 @@ import LoadingSpinner from '../../icons/loading-spinner.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
 import LogFileIcon from '../../icons/log-file.jsx';
+import SwaggerIcon from '../../icons/swagger.jsx';
+import './application-list-row.css'
 
 export default function ApplicationListRow(props) {
 
@@ -48,8 +50,9 @@ export default function ApplicationListRow(props) {
                 </td>
                 <td>{app.name}</td>
                 <td>{app.port}</td>
-                <td>
-                    <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/> Logs</span>
+                <td className='action-cell'>
+                    <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="14" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/><span>Logs</span></span>
+                    <span><SwaggerIcon tooltip="Open swagger" size="small"/><span>API</span></span>
                 </td>
             </tr>
 ;
