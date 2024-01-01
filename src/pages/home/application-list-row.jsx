@@ -43,13 +43,13 @@ export default function ApplicationListRow(props) {
                 <td>
                     {app.status}
                     {shouldShowSpinner() && <LoadingSpinner color='#0eb8e3' size='14'/>}
-                    {app.status == 'Stopped' && <PlayIcon color="#035720" hoverColor="#0bb847" size="14" onClickEvent={()=>appManagerService.startApp(app)}/>}
-                    {app.status == 'Running' && <StopIcon color="#a83d4d" hoverColor="#ff0328" size="14" onClickEvent={()=>appManagerService.stopApp(app)}/>}
+                    {app.status == 'Stopped' && <PlayIcon color="#035720" hoverColor="#0bb847" size="14" tooltip="Start App" onClickEvent={()=>appManagerService.startApp(app)}/>}
+                    {app.status == 'Running' && <StopIcon color="#a83d4d" hoverColor="#ff0328" size="14" tooltip="Stop App" onClickEvent={()=>appManagerService.stopApp(app)}/>}
                 </td>
                 <td>{app.name}</td>
                 <td>{app.port}</td>
                 <td>
-                    <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" onClickEvent={()=>onLogs(app)}/> Logs</span>
+                    <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="12" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/> Logs</span>
                 </td>
             </tr>
 ;

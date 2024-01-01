@@ -9,10 +9,10 @@ const Layout = () => {
       <>
         <div className="sidenav">
           <Link to="/">
-            <HomeIcon color="white" size="25"/>
+            <HomeIcon color="white" size="25" tooltip="Home"/>
           </Link>
           <Link to="/manage/index">
-            <CogIcon color="white" size="25"/>
+            <CogIcon color="white" size="25" tooltip="Settings"/>
           </Link>
         </div>
 
