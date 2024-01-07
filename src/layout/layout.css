@@ -45,7 +45,6 @@ body {
     top: 0;
     left: 0;
     background-color: var(--color-surface-300);
-    overflow-x: hidden;
     padding-top: 10px;
   }
   
@@ -80,12 +79,27 @@ body {
     text-align: left;
   }
 
+  .right-align-container {
+    width: 500px;
+    text-align: right;
+  }
+
 label {
   font-size: 16px;
   margin: 5px;
 }
 
 input {
+  background-color: var(--color-surface-mixed-300);
+  border-radius: 4px;
+  border: none;
+  font-size: 15px;
+  margin: 5px;
+  color: white;
+  padding: 5px;
+}
+
+select {
   background-color: var(--color-surface-mixed-300);
   border-radius: 4px;
   border: none;
@@ -146,4 +160,32 @@ table thead tr {
 table th,
 table td {
     padding: 12px 15px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: var(--color-primary-300);
+  border-color: var(--color-primary-100);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 3px 0;
+  font-size:15px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 2;
+  width: 120px;
+  top: 100%;
+  left: 50%;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

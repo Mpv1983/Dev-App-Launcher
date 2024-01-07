@@ -1,5 +1,5 @@
 import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
-import AppConfig from '../../models/app.js'
+import { App, AppConfig } from '../../models/app.js'
 
 const LOG_EVENT = 'logEvent';
 const APP_EVENT = 'appEvent';
@@ -28,7 +28,11 @@ export default class AppManagerService{
         var hasApps = await window.FileSystemService.readJsonFile({fileName: 'configuredApps'})
         .then((configuredApps) => {
             if(configuredApps != undefined){
-                this.apps = configuredApps;
+                var apps = [];
+                configuredApps.forEach(appConfig=>{
+                    apps.push(new App(appConfig));
+                })
+                this.apps = apps;
                 this.updateAllAppStatus();// Get initial app status
             }
             this.hasCheckedForConfigFile = true;
@@ -43,7 +47,7 @@ export default class AppManagerService{
      * @param {object} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, log:[], status:'Unknown' });
+        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, url:app.url, log:[], status:'Unknown' });
 
         var appConfigs = [];
 
@@ -123,7 +127,6 @@ export default class AppManagerService{
             this.apps[index].log.push(logEntry);
             this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
         });
-
     }
 
     /**

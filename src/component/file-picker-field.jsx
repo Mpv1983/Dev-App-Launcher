@@ -28,7 +28,7 @@ export default function FilePickerField(props) {
         <Modal showModal={modalState} modalClosedEvent={hideModal} id={modalId}>{fileSelectError}</Modal>
 
         <div className='file-picker'>
-            <label className="file-picker-label">{file.name}</label>
+            <label className="file-picker-label">{file.path}</label>
             <FilePicker extensions={[props.fileExtension]} onChange={FileObject => handleFileSelected(FileObject)} onError={errMsg => handleFileError(errMsg)}>
                 <button className="file-picker-button">
                     {label}
