@@ -33,6 +33,7 @@ export class App{
             this.url = '';
             this.log = [];
             this.status = 'Unknown';
+            this.gitBranch = '';
         }
         else{
             this.name = app.name;
@@ -43,6 +44,7 @@ export class App{
             this.url = app.url;
             this.log = [];
             this.status = 'Unknown';
+            this.gitBranch = app.gitBranch;
         }
 
     }

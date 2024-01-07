@@ -24,6 +24,7 @@ export default function ApplicationList(props) {
                 <tr>
                     <th></th>
                     <th>Application</th>
+                    <th>Git Branch</th>
                     <th>Port</th>
                     <th>Actions</th>
                 </tr>

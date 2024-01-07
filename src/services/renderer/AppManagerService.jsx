@@ -47,7 +47,7 @@ export default class AppManagerService{
      * @param {object} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, url:app.url, log:[], status:'Unknown' });
+        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
 
         var appConfigs = [];
 
@@ -157,6 +157,13 @@ export default class AppManagerService{
                 var appToUpdate = this.getAppByPort(app.port);
                 appToUpdate.status = newStatus;
             }
+            this.pushEventToSubscriber(APP_EVENT, app.port, null);// No data needed, just trigger to refresh
+        });
+
+        window.GitService.getBranchName({app})
+        .then((branch) => {
+            var appToUpdate = this.getAppByPort(app.port);
+            appToUpdate.gitBranch = branch;
             this.pushEventToSubscriber(APP_EVENT, app.port, null);// No data needed, just trigger to refresh
         });
     }
