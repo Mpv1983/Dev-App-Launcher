@@ -13,6 +13,7 @@ export default function ManageApp(props) {
     const [appName, SetAppName] = useState('');
     const [path, SetPath] = useState('');
     const [appType, SetAppType] = useState('Not Set');
+    const [url, SetUrl] = useState('');
     const { serviceProvider } = useContext(ServiceProviderContext);
     let navigate = useNavigate();
     
@@ -22,9 +23,32 @@ export default function ManageApp(props) {
         SetPath(file.path);
     }
 
+    function onUpdatePort(e){
+        var newPort = handleChange(e, SetPort);
+        setAppUrl(appType, newPort);
+    }
+
+    function onUpdateAppType(e){
+        var newAppType = handleChange(e, SetAppType);
+        setAppUrl(newAppType, port);
+    }
+
+    /**
+     * After the update of other fields the url needs to be updated (e.g. if port or app type changes)
+     */
+    function setAppUrl(newAppType, newPort){
+        console.log(newAppType, newPort);
+        switch(newAppType){
+            case 'API with swagger':
+                var appUrl = `http://localhost:${newPort}/swagger/index.html`;
+                SetUrl(appUrl);
+            break;
+        }
+    }
+
     function saveApplication(){
         var executable = appName.replace('csproj','exe');
-        serviceProvider.appManagerService.addApplication({port:port, name:appName, path:path, executable:executable, appType:appType });
+        serviceProvider.appManagerService.addApplication({port:port, name:appName, path:path, executable:executable, appType:appType, url:url });
         navigate("/");
     }
 
@@ -41,8 +65,9 @@ export default function ManageApp(props) {
                     <div className='left-align-container'>
                         <div className='right-align-container manage-app-form'>
                             <TextField label='App Name' value={appName} onChange={(e)=>handleChange(e, SetAppName)}/>
-                            <TextField label='Port' value={port} onChange={(e)=>handleChange(e, SetPort)}/>
-                            <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI']} onChange={(e)=>handleChange(e, SetAppType)} />
+                            <TextField label='Port' value={port} onChange={onUpdatePort}/>
+                            <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI']} onChange={onUpdateAppType} />
+                            <TextField label='Url' value={url} onChange={(e)=>handleChange(e, SetUrl)}/>
                         </div>
                     </div>
                 </div>

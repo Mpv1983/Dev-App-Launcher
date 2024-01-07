@@ -12,12 +12,18 @@ import './application-list-row.css'
 export default function ApplicationListRow(props) {
 
     let navigate = useNavigate();
+
+
     const { serviceProvider } = useContext(ServiceProviderContext);
     const appManagerService = serviceProvider.appManagerService;
     const [app, SetApp] = useState(props.app);
 
     function onLogs(app){
         navigate(`/log-viewer/${app.port}`);
+    }
+
+    function onOpenApi(app){
+        window.WebBrowserService.openBrowserToUrl({url: app.url});
     }
 
     function refreshApp(eventData){
@@ -52,7 +58,7 @@ export default function ApplicationListRow(props) {
                 <td>{app.port}</td>
                 <td className='action-cell'>
                     <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="14" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/><span>Logs</span></span>
-                    <span><SwaggerIcon tooltip="Open swagger" size="small"/><span>API</span></span>
+                    <span><SwaggerIcon tooltip="Open swagger" size="small" onClickEvent={()=>onOpenApi(app)}/><span>API</span></span>
                 </td>
             </tr>
 ;

@@ -32,3 +32,9 @@ contextBridge.exposeInMainWorld('FileSystemService', {
     return await ipcRenderer.invoke('readJsonFile', args);
   }
 })
+
+contextBridge.exposeInMainWorld('WebBrowserService', {
+  openBrowserToUrl: async (args) => {
+    return await ipcRenderer.invoke('openBrowserToUrl', args);
+  }
+})

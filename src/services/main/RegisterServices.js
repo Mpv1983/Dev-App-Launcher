@@ -1,5 +1,6 @@
 import AppRunnerService from './AppRunnerService.js';
 import FileSystemService from './FileSystemService.js';
+import WebBrowserService from './WebBrowserService.js';
 
 /**
  * This will register main services
@@ -11,9 +12,11 @@ export default function registerServices(ipcMain, mainWindow){
 
   const appRunnerService = new AppRunnerService();
   const fileSystemService = new FileSystemService();
+  const webBrowserService = new WebBrowserService();
   var services = [];
   services.push(appRunnerService);
   services.push(fileSystemService);
+  services.push(webBrowserService);
 
   ipcMain.handle('startDotNetApp', async (event, args) => {
       appRunnerService.startDotNetApp(args.app, sender);
@@ -39,5 +42,10 @@ export default function registerServices(ipcMain, mainWindow){
       
   ipcMain.handle('readJsonFile', async(event, args)=>{
     return fileSystemService.readJsonFile(args.fileName);
+  });
+
+  ipcMain.handle('openBrowserToUrl', async (event, args) => {
+    webBrowserService.openBrowserToUrl(args.url);
+    return;
   });
 }

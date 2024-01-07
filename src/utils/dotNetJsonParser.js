@@ -8,7 +8,6 @@ export default function parseDotNetOutputToJson(dotNetOut){
 
     //  Try to handle simple object
     var outcome = tryParseJson(dotNetOut);
-    console.log('outcome Simple', outcome);
     if(outcome.isSuccess == true){
         jsonArray.push(outcome.output);
         
@@ -17,7 +16,6 @@ export default function parseDotNetOutputToJson(dotNetOut){
 
     //  Try to handle multiple jsons that are not comma delimited
     var outcome = tryParseJsonArray(dotNetOut);
-    console.log('outcome Multiple', outcome);
     if(outcome.isSuccess == true){
         return outcome.output;
     }
@@ -33,7 +31,6 @@ export default function parseDotNetOutputToJson(dotNetOut){
 
     jsonArray.push(json);
 
-    console.log('Returning Console');
     return jsonArray;
   }
 

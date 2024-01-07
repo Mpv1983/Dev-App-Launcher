@@ -38,15 +38,15 @@ const SwaggerIcon = (props) => {
 
     return (
 		<div className={tooltipClass}>
-			{props.tooltip != undefined && <span class="tooltiptext">{props.tooltip}</span>}
+			{props.tooltip != undefined && <span className="tooltiptext">{props.tooltip}</span>}
 			<svg 
 			xmlns="http://www.w3.org/2000/svg" 
 			height={size}
 			width={size}
 			style= {{cursor:cursor}}
 			onClick={onClickEventHandler}>
-				<circle cx={circleXY} cy={circleXY} r={circleRadius} stroke="#4b6e03" stroke-width="2" fill="#94db04"></circle>
-				<text text x={textX} y={textY} fill="#4b6e03" fontWeight="bold" fontSize={fontSize}>&#123;...&#125;</text>
+				<circle cx={circleXY} cy={circleXY} r={circleRadius} stroke="#4b6e03" strokeWidth="2" fill="#94db04"></circle>
+				<text x={textX} y={textY} fill="#4b6e03" fontWeight="bold" fontSize={fontSize}>&#123;...&#125;</text>
 			</svg>
 	  </div>
 

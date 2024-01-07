@@ -19,7 +19,7 @@ const BaseIcon = (props) => {
   return (
 
     <div className={tooltipClass}>
-      {props.tooltip != undefined && <span class="tooltiptext">{props.tooltip}</span>}
+      {props.tooltip != undefined && <span className="tooltiptext">{props.tooltip}</span>}
       <svg 
           xmlns="http://www.w3.org/2000/svg" 
           viewBox={props.viewBox} 
