@@ -1,5 +1,6 @@
 import AppRunnerService from './AppRunnerService.js';
 import FileSystemService from './FileSystemService.js';
+import GitService from './GitService.js';
 import WebBrowserService from './WebBrowserService.js';
 
 /**
@@ -12,10 +13,13 @@ export default function registerServices(ipcMain, mainWindow){
 
   const appRunnerService = new AppRunnerService();
   const fileSystemService = new FileSystemService();
+  const gitService = new GitService();
   const webBrowserService = new WebBrowserService();
+
   var services = [];
   services.push(appRunnerService);
   services.push(fileSystemService);
+  services.push(gitService);
   services.push(webBrowserService);
 
   ipcMain.handle('startDotNetApp', async (event, args) => {
@@ -42,6 +46,10 @@ export default function registerServices(ipcMain, mainWindow){
       
   ipcMain.handle('readJsonFile', async(event, args)=>{
     return fileSystemService.readJsonFile(args.fileName);
+  });
+
+  ipcMain.handle('getBranchName', async(event, args)=>{
+    return gitService.getBranchName(args.app);
   });
 
   ipcMain.handle('openBrowserToUrl', async (event, args) => {

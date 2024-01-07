@@ -33,6 +33,12 @@ contextBridge.exposeInMainWorld('FileSystemService', {
   }
 })
 
+contextBridge.exposeInMainWorld('GitService', {
+  getBranchName: async (args) => {
+    return await ipcRenderer.invoke('getBranchName', args);
+  }
+})
+
 contextBridge.exposeInMainWorld('WebBrowserService', {
   openBrowserToUrl: async (args) => {
     return await ipcRenderer.invoke('openBrowserToUrl', args);

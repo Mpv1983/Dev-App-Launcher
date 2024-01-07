@@ -55,6 +55,7 @@ export default function ApplicationListRow(props) {
                     {app.status == 'Running' && <StopIcon color="#a83d4d" hoverColor="#ff0328" size="14" tooltip="Stop App" onClickEvent={()=>appManagerService.stopApp(app)}/>}
                 </td>
                 <td>{app.name}</td>
+                <td>{app.gitBranch}</td>
                 <td>{app.port}</td>
                 <td className='action-cell'>
                     <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="14" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/><span>Logs</span></span>
