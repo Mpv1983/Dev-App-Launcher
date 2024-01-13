@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
-import Modal from '../../component/modal.jsx'
 import LoadingSpinner from '../../icons/loading-spinner.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
 import LogFileIcon from '../../icons/log-file.jsx';
 import SwaggerIcon from '../../icons/swagger.jsx';
+import WebAppIcon from '../../icons/webApp.jsx';
 import './application-list-row.css'
 
 export default function ApplicationListRow(props) {
@@ -22,7 +22,7 @@ export default function ApplicationListRow(props) {
         navigate(`/log-viewer/${app.port}`);
     }
 
-    function onOpenApi(app){
+    function onOpenUrl(app){
         window.WebBrowserService.openBrowserToUrl({url: app.url});
     }
 
@@ -59,7 +59,8 @@ export default function ApplicationListRow(props) {
                 <td>{app.port}</td>
                 <td className='action-cell'>
                     <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="14" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/><span>Logs</span></span>
-                    <span><SwaggerIcon tooltip="Open swagger" size="small" onClickEvent={()=>onOpenApi(app)}/><span>API</span></span>
+                    {app.appType == 'API with swagger' && <span><SwaggerIcon tooltip="Open swagger" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>API</span></span>}
+                    {app.appType == 'UI' && <span><WebAppIcon tooltip="Open UI" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>UI</span></span>}
                 </td>
             </tr>
 ;

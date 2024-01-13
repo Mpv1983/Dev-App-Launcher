@@ -42,7 +42,12 @@ export default function ManageApp(props) {
             case 'API with swagger':
                 var appUrl = `http://localhost:${newPort}/swagger/index.html`;
                 SetUrl(appUrl);
-            break;
+                break;
+
+            case 'UI':
+                var appUrl = `http://localhost:${newPort}`;
+                SetUrl(appUrl);
+                break;
         }
     }
 

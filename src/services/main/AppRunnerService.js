@@ -85,8 +85,18 @@ export default class AppRunnerService {
 
   getProcessId(app) {
 
-    var buffer = execSync(`netstat -aon | findstr :${app.port}`, { timeout: 1000 });
-    var netstatResults = buffer.toString().split('\n');
+    var bufferString = '';
+
+    try{
+      var buffer = execSync(`netstat -aon | findstr :${app.port}`, { timeout: 1000 });
+      bufferString = buffer.toString();
+    }
+    catch(ex){
+      console.log(ex);
+      return undefined;
+    }
+    
+    var netstatResults = bufferString.split('\n');
     var processId = undefined;
 
     for (const item of netstatResults){

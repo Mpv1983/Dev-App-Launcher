@@ -1,6 +1,6 @@
 import * as React from 'react';
-   
-const SwaggerIcon = (props) => {
+
+const WebAppIcon = (props) => {
 	const tooltipClass = props.tooltip == undefined ? '' : 'tooltip'; 
 	const cursor = props.onClickEvent == undefined ? 'inherit' : 'pointer'; 
 
@@ -18,8 +18,8 @@ const SwaggerIcon = (props) => {
 				circleXY = 9;
 				circleRadius = 8;
 				textX = 2.55;
-				textY = 11;
-				fontSize = '8px';
+				textY = 12;
+				fontSize = '9px';
 				size = '18px';
 				break;
 		}
@@ -42,12 +42,12 @@ const SwaggerIcon = (props) => {
 			width={size}
 			style= {{cursor:cursor}}
 			onClick={onClickEventHandler}>
-				<circle cx={circleXY} cy={circleXY} r={circleRadius} stroke="#4b6e03" strokeWidth="2" fill="#94db04"></circle>
-				<text x={textX} y={textY} fill="#4b6e03" fontWeight="bold" fontSize={fontSize}>&#123;...&#125;</text>
+				<circle cx={circleXY} cy={circleXY} r={circleRadius} stroke="#023a3b" strokeWidth="2" fill="#20c7c9"></circle>
+				<text x={textX} y={textY} fill="#023a3b" fontWeight="bold" fontSize={fontSize}>&lt;/&gt;</text>
 			</svg>
 	  </div>
 
     )
 };
 
-export default SwaggerIcon;
+export default WebAppIcon;
