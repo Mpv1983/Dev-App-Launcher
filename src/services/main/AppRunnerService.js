@@ -92,7 +92,7 @@ export default class AppRunnerService {
       bufferString = buffer.toString();
     }
     catch(ex){
-      console.log(ex);
+      console.log('getProcessId', ex);
       return undefined;
     }
     

@@ -2,6 +2,7 @@
     background-color: black;
     font-family: 'Courier New', monospace;
     text-align: left;
+    margin: 0%!important;
 }
 
 .Error{
@@ -18,4 +19,48 @@
 
 .Information{
     color: aqua;
+}
+
+
+.fixed-scrollable-div{
+    height: 600px;
+    overflow: auto;
+}
+
+.fixed_headers {
+    border-collapse: collapse;
+    width:100%;
+  }
+  .fixed_headers td,
+  .fixed_headers thead th {
+    padding: 5px;
+    text-align: left;
+    word-break: break-all;
+  }
+  .fixed_headers thead tr {
+    position: relative;
+  }
+  
+  .fixed_headers thead th {
+    position: sticky;
+    top: 0;  /* REQUIRED: https://stackoverflow.com/a/43707215 */
+    background-color: #333; 
+    resize: horizontal;
+    overflow: auto;
+  }
+
+.column-loglevel{
+    min-width: 100px;
+}
+
+.column-lineNumber{
+    min-width: 20px;
+}
+
+.column-time{
+    min-width: 70px;
+}
+
+.hideRow{
+    display: none;
 }

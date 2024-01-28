@@ -26,6 +26,7 @@ export default function parseDotNetOutputToJson(dotNetOut){
     var json = {
         Timestamp:`${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`,
         LogLevel:'Console',
+        Category:'Console',
         Message:dotNetOut
     };
 

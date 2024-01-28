@@ -16,13 +16,15 @@ export default function Modal(props) {
         setModalState(props.showModal);
         if(modalState){
             setModal("block");
+        }else{
+            setModal("none");
         }
     });
 
     return <div id={props.id} className="modal" style={{display:displayModal}}>
                 <div className="modal-content" style={{display:displayModal}}>
                 <span className="close" onClick={hideModal}>&times;</span>
-                <p>{ props.children }</p>
+                <div>{ props.children }</div>
                 </div>
             </div>;
   }
