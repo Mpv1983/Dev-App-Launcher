@@ -123,7 +123,7 @@ export default class AppManagerService{
 
         jsonArray.forEach(json=>{
             var lineNumber = this.apps[index].log.length + 1;
-            var logEntry = { lineNumber: lineNumber, json: json };
+            var logEntry = { lineNumber: lineNumber, json: json, appInfo: {name: this.apps[index].name, port: this.apps[index].port }};
             this.apps[index].log.push(logEntry);
             this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
         });

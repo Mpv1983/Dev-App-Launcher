@@ -26,12 +26,9 @@ export default function LogViewer(props) {
         console.log(filter);
         SetLogFilter(filter);
         SetModal(false);
-       // var newAppType = handleChange(e, SetAppType);
-       // setAppUrl(newAppType, port);
     }
 
     function rowVisibility(logRow){
-        console.log('logRow in rowVis', logRow, logFilter);
         switch(logRow.LogLevel){
             case "Console":
                 console.log('ConsoleFound');
@@ -59,7 +56,6 @@ export default function LogViewer(props) {
                 break;
         }
 
-        console.log('notmatched');
         return 'showrow';
     }
 
