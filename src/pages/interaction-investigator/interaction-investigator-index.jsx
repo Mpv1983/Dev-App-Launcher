@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState} from 'react';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
+import './interaction-investigator-index.css';
 
 export default function InteractionInvestigatorIndex(props) {
 
@@ -105,13 +106,17 @@ export default function InteractionInvestigatorIndex(props) {
 
                 {interactingApps.map((appInfo) => (
 
-                    <td key={`${groupedInteraction.rowKey}-${appInfo.port}`}>
-                    { (appInfo.port == groupedInteraction.port) ? (
-                        <span>{groupedInteraction.httpVerb} {groupedInteraction.endPoint}</span>
-                      ) : (
-                        <span>|</span>
-                      )}
-                    </td>
+                    (appInfo.port == groupedInteraction.port) ? (
+                        <td key={`${groupedInteraction.rowKey}-${appInfo.port}`} className="cell-with-line">
+                            <div className='info-box'>
+                                <span>{groupedInteraction.httpVerb}</span>
+                                <span>{groupedInteraction.endPoint}</span>
+                            </div>
+                        </td>
+                    ) : (
+                        <td key={`${groupedInteraction.rowKey}-${appInfo.port}`} className="cell-with-line"></td>
+                    )
+
                 ))}
 
                 </tr>
