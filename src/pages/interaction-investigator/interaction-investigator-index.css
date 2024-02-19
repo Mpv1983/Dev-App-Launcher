@@ -1,0 +1,26 @@
+.cell-with-line {
+    position: relative;
+    text-align: center;
+  }
+  
+  .cell-with-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    border-left: 2px solid black; /* Change the thickness, color, or style as needed */
+  }
+
+  .info-box{
+    background-color: var(--color-primary-100);
+    position: relative;
+    z-index: 100;
+    display: inline-grid;
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .info-box span{
+    margin: 5px;
+  }

@@ -4,7 +4,7 @@ const path = require('path');
 
 export default class FileSystemService {
     constructor() {
-  
+
     }
 
     /**
@@ -15,13 +15,12 @@ export default class FileSystemService {
     saveJsonFile(fileName, json){
 
         const fileNameWithExtension = `${fileName}.json`;
-        const filePath = path.join(__dirname, fileNameWithExtension);
 
         // Convert the JSON object to a string
         const jsonContent = JSON.stringify(json, null, 2);
 
         // Write the JSON string to a file
-        fs.writeFile(filePath, jsonContent, (err) => {
+        fs.writeFile(fileNameWithExtension, jsonContent, (err) => {
             if (err) {
                 console.error('Error writing file:', err);
                 return;
@@ -38,14 +37,7 @@ export default class FileSystemService {
     async readJsonFile(fileName, callback){
 
         const fileNameWithExtension = `${fileName}.json`;
-        var filePath = path.join(__dirname, fileNameWithExtension); // Initially try to locate file at executable location
-
-        var fileExists = await this.checkFileExists(filePath);
-
-        if(fileExists != true){
-            filePath = fileNameWithExtension; // Change location for file to where npm start has been called from
-            fileExists = await this.checkFileExists(filePath);
-        }
+        var fileExists = await this.checkFileExists(fileNameWithExtension);
 
         if(fileExists != true){
             // File does not exist, return nothing
@@ -54,7 +46,7 @@ export default class FileSystemService {
 
         try {
             // If the file exists, proceed with reading it
-            const data = await fsPromises.readFile(filePath);
+            const data = await fsPromises.readFile(fileNameWithExtension);
             return JSON.parse(data);
         } catch (error) {
             console.error('Error reading file:', error);

@@ -5,6 +5,7 @@ import ManageApp from './pages/manage/manage-app.jsx'
 import HomePage from './pages/home/home.jsx';
 import Layout from './layout/layout.jsx';
 import LogViewer from './pages/log-viewer/log-viewer-index.jsx';
+import InteractionInvestigatorIndex from './pages/interaction-investigator/interaction-investigator-index.jsx';
 
 export default function AppRouter(props) {
     return <HashRouter>
@@ -18,6 +19,9 @@ export default function AppRouter(props) {
             </Route>
             <Route path="/log-viewer" element={<Layout />}>
                 <Route path=":port" element={<LogViewer />} />
+            </Route>
+            <Route path="/interaction-investigator" element={<Layout />}>
+                <Route path="index" element={<InteractionInvestigatorIndex />} />
             </Route>
         </Routes>
     </HashRouter>;
