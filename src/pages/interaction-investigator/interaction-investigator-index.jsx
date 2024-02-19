@@ -32,33 +32,30 @@ export default function InteractionInvestigatorIndex(props) {
 
         interactions.forEach((interactionEvent)=>{
 
+            //  Update interacting apps
             var appIndex = iApps.findIndex(appInfo => appInfo.port == interactionEvent.appInfo.port);
             if(appIndex == -1){
                 iApps.push(interactionEvent.appInfo)
             }
 
-            var requestId = getRequestId(interactionEvent);
-            console.log('requestId', requestId);
-            var groupedInteractionIndex = gInteractions.findIndex(groupedInteraction => groupedInteraction.requestId == requestId);
-
-            if(groupedInteractionIndex == -1){
+            //  Add new interaction group to array (with will be represented as a new table row in the table below)
+            if(gInteractions.length == 0 || gInteractions[gInteractions.length - 1].port != interactionEvent.appInfo.port){
                 gInteractions.push({
                     port: interactionEvent.appInfo.port,
-                    requestId:requestId,
+                    rowKey: (gInteractions.length + 1),
                     interactions: [],
                     httpVerb: '',
-                    endPoint: '',
+                    endPoint: ''
                 });
-
-                groupedInteractionIndex = gInteractions.findIndex(groupedInteraction => groupedInteraction.requestId == requestId);
             }
 
-            console.log('gInteractions', gInteractions, groupedInteractionIndex, gInteractions[groupedInteractionIndex]);
-            gInteractions[groupedInteractionIndex].interactions.push(interactionEvent);
+            //  Add the interactionEvent to the current row
+            gInteractions[gInteractions.length - 1].interactions.push(interactionEvent);
 
-            if(interactionEvent.json.Category == "Microsoft.AspNetCore.Hosting.Diagnostics" && gInteractions[groupedInteractionIndex].httpVerb == ''){
-                gInteractions[groupedInteractionIndex].httpVerb = interactionEvent.json.State.Method;
-                gInteractions[groupedInteractionIndex].endPoint = interactionEvent.json.State.Path;
+            //  Set the method and verb
+            if(interactionEvent.json.Category == "Microsoft.AspNetCore.Hosting.Diagnostics" && gInteractions[gInteractions.length - 1].httpVerb == ''){
+                gInteractions[gInteractions.length - 1].httpVerb = interactionEvent.json.State.Method;
+                gInteractions[gInteractions.length - 1].endPoint = interactionEvent.json.State.Path;
             }
         });
 
@@ -71,18 +68,6 @@ export default function InteractionInvestigatorIndex(props) {
 
     function updateInteractionEvent(interactionEvent){
         setInteractions(prevInteractions => [...prevInteractions, interactionEvent]);
-    }
-
-    function getRequestId(interactionEvent){
-
-        for (const scope of interactionEvent.json.Scopes) {
-            if (scope.RequestId !== undefined) {
-                return scope.RequestId;
-            }
-        }
-    
-        return undefined;
-
     }
 
     useEffect(() => {
@@ -116,11 +101,11 @@ export default function InteractionInvestigatorIndex(props) {
 
             <tbody>
             {groupedInteractions.map((groupedInteraction) => (
-                <tr key={groupedInteraction.requestId}>
+                <tr key={groupedInteraction.rowKey}>
 
                 {interactingApps.map((appInfo) => (
 
-                    <td key={`${groupedInteraction.requestId}-${appInfo.port}`}>
+                    <td key={`${groupedInteraction.rowKey}-${appInfo.port}`}>
                     { (appInfo.port == groupedInteraction.port) ? (
                         <span>{groupedInteraction.httpVerb} {groupedInteraction.endPoint}</span>
                       ) : (
