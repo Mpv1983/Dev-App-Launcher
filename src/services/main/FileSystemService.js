@@ -14,7 +14,7 @@ export default class FileSystemService {
      */
     saveJsonFile(fileName, json){
 
-        const fileNameWithExtension = `${fileName}.json`;
+        const fileNameWithExtension = fileName;
 
         // Convert the JSON object to a string
         const jsonContent = JSON.stringify(json, null, 2);
@@ -36,7 +36,7 @@ export default class FileSystemService {
      */
     async readJsonFile(fileName, callback){
 
-        const fileNameWithExtension = `${fileName}.json`;
+        const fileNameWithExtension = fileName;
         var fileExists = await this.checkFileExists(fileNameWithExtension);
 
         if(fileExists != true){

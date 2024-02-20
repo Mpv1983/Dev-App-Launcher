@@ -25,7 +25,7 @@ export default class AppManagerService{
      * @returns {boolean} true if there are configured apps
      */
     async retrieveConfig(){
-        var hasApps = await window.FileSystemService.readJsonFile({fileName: 'configuredApps'})
+        var hasApps = await window.FileSystemService.readJsonFile({fileName: 'configuredApps.json'})
         .then((configuredApps) => {
             if(configuredApps != undefined){
                 var apps = [];
@@ -47,7 +47,7 @@ export default class AppManagerService{
      * @param {object} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
+        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, launchProfile:app.launchProfile, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
 
         var appConfigs = [];
 
@@ -55,7 +55,7 @@ export default class AppManagerService{
             appConfigs.push(new AppConfig(app));
         })
 
-        window.FileSystemService.saveJsonFile({fileName: 'configuredApps', json:appConfigs})
+        window.FileSystemService.saveJsonFile({fileName: 'configuredApps.json', json:appConfigs})
         .then(() => {
             //
         });

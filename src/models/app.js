@@ -8,6 +8,7 @@ export class AppConfig{
             this.executable = '';
             this.appType = 'Not Set';
             this.url = '';
+            this.launchProfile = '';
         }
         else{
             this.name = app.name;
@@ -16,6 +17,7 @@ export class AppConfig{
             this.executable = app.executable;
             this.appType = app.appType;
             this.url = app.url;
+            this.launchProfile = app.launchProfile;
         }
 
     }
@@ -31,6 +33,7 @@ export class App{
             this.executable = '';
             this.appType = 'Not Set';
             this.url = '';
+            this.launchProfile = '';
             this.log = [];
             this.status = 'Unknown';
             this.gitBranch = '';
@@ -42,6 +45,7 @@ export class App{
             this.executable = app.executable;
             this.appType = app.appType;
             this.url = app.url;
+            this.launchProfile = app.launchProfile;
             this.log = [];
             this.status = 'Unknown';
             this.gitBranch = app.gitBranch;

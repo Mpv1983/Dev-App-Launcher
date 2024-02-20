@@ -16,7 +16,7 @@ export default class AppRunnerService {
       return;
     }
 
-    var dotnetProcess = exec(getDotNetRunString(app.path, app.port));
+    var dotnetProcess = exec(getDotNetRunString(app.path, app.port, app.launchProfile));
 
     dotnetProcess.stdout.on('data', (data) => {
       const dataToSend = { message: { data:data, port:app.port } };

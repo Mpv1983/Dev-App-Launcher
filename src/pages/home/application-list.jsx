@@ -19,21 +19,23 @@ export default function ApplicationList(props) {
     }, []);
     
 
-    return <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Application</th>
-                    <th>Git Branch</th>
-                    <th>Port</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {apps.map((app) => (
-                <ApplicationListRow key={app.port} app={app}/>
-            ))}
-            </tbody>
-        </table>
+    return <div className='centered-container'>
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Application</th>
+                        <th>Git Branch</th>
+                        <th>Port</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {apps.map((app) => (
+                    <ApplicationListRow key={app.port} app={app}/>
+                ))}
+                </tbody>
+            </table>
+        </div>
     ;
 }

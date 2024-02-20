@@ -3,7 +3,7 @@
  * @param {string} path - Path for csproj file to start.
  * @param {number} port - Port to run the app on.
  */
-export default function getDotNetRunString(path, port){
+export default function getDotNetRunString(path, port, launchProfile){
 
     var loggingAppSettings = '--Logging:LogLevel:Default=Debug '
     loggingAppSettings += '--Logging:Console:LogLevel:Default=Debug '
@@ -14,7 +14,15 @@ export default function getDotNetRunString(path, port){
     loggingAppSettings += '--Logging:Console:FormatterOptions:UseUtcTimestamp=true '
     loggingAppSettings += '--Logging:Console:FormatterOptions:JsonWriterOptions:Indented=true'
 
-    var cmd =`dotnet run --project ${path} --urls http://localhost:${port} ${loggingAppSettings}`;
+    var launchOption ='';
+    if(launchProfile == undefined || launchProfile == '' || launchProfile == null){
+      launchOption = `--urls http://localhost:${port}`;
+    }
+    else{
+      launchOption = `--launch-profile "${launchProfile}"`;
+    }
+
+    var cmd =`dotnet run --project ${path} ${launchOption} ${loggingAppSettings}`;
 
     return cmd;
   }
