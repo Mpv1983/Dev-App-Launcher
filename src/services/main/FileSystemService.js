@@ -46,8 +46,17 @@ export default class FileSystemService {
 
         try {
             // If the file exists, proceed with reading it
-            const data = await fsPromises.readFile(fileNameWithExtension);
-            return JSON.parse(data);
+            var data = await fsPromises.readFile(fileNameWithExtension);
+
+            // Remove BOM if present
+            if (data[0] === 0xEF && data[1] === 0xBB && data[2] === 0xBF) {
+                data = data.slice(3);
+            }
+
+            // Convert buffer to string and parse JSON
+            const jsonString = data.toString();
+            return JSON.parse(jsonString);
+            
         } catch (error) {
             console.error('Error reading file:', error);
             return null; // Return null if any error occurs
