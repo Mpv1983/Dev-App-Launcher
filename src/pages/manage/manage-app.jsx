@@ -93,7 +93,7 @@ export default function ManageApp(props) {
                             <TextField label='Executable' value={executable} onChange={(e)=>handleChange(e, SetExecutable)}/>
                             <TextField label='Port' value={port} onChange={onUpdatePort}/>
                             <SelectField label='Launch Profile' value={launchProfile} options={launchProfileOptions} onChange={(e)=>handleChange(e, SetLaunchProfile)} />
-                            <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI']} onChange={onUpdateAppType} />
+                            <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI', 'Console']} onChange={onUpdateAppType} />
                             <TextField label='Url' value={url} onChange={(e)=>handleChange(e, SetUrl)}/>
                         </div>
                     </div>

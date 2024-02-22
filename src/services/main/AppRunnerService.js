@@ -11,8 +11,13 @@ export default class AppRunnerService {
 
   startDotNetApp(app, eventPublisher) {
 
-    if (!app.path || !app.port) {
-      console.error('Please provide both the path/name of the .NET project and the port number.');
+    if (!app.path) {
+      console.error('Please provide the path of the .NET project.');
+      return;
+    }
+
+    if (app.appType != 'Console' && !app.port) {
+      console.error('Please provide the port number.');
       return;
     }
 
@@ -85,6 +90,13 @@ export default class AppRunnerService {
 
   getProcessId(app) {
 
+
+    if(app.appType == 'Console'){
+      var tempPid = this.getPIDByExecutableName(app);
+      return tempPid;
+    }
+
+    //  For non console apps
     var bufferString = '';
 
     try{
@@ -135,5 +147,23 @@ export default class AppRunnerService {
     }
 
     return undefined;
+  }
+
+  getPIDByExecutableName(app){
+    try {
+      const output = execSync(`tasklist /FO CSV`);
+      const lines = output.toString().split('\n');
+
+      const numberOfMatchingTasks = lines.filter(row => row.includes(app.executable)).length;
+
+      if (numberOfMatchingTasks == 1) {
+        var matchingTask = lines.find(row => row.includes(app.executable)).split('","');
+        return matchingTask[1].replace('"', ''); // Extracting the executable name
+      }
+
+      console.log('Process not found');
+    } catch (error) {
+      console.log('Error occurred', error);
+    }
   }
 }
