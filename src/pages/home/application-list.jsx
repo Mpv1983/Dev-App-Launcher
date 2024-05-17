@@ -2,10 +2,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import ApplicationListRow from './application-list-row.jsx'
-import LoadingSpinner from '../../icons/loading-spinner.jsx';
-import PlayIcon from '../../icons/play.jsx';
-import StopIcon from '../../icons/stop.jsx';
-import LogFileIcon from '../../icons/log-file.jsx';
+import RefreshIcon from '../../icons/refresh.jsx';
+import './application-list.css'
 
 export default function ApplicationList(props) {
 
@@ -13,6 +11,10 @@ export default function ApplicationList(props) {
     const { serviceProvider } = useContext(ServiceProviderContext);
     const [apps, SetApps] = useState([]);
 
+
+    function onRefresh(){
+        serviceProvider.appManagerService.updateAllAppStatus();
+    }
 
     useEffect(() => {
         SetApps(serviceProvider.appManagerService.getClonedApplications());
@@ -23,7 +25,7 @@ export default function ApplicationList(props) {
             <table>
                 <thead>
                     <tr>
-                        <th></th>
+                        <th className='refresh-cell'><RefreshIcon size="14" onClickEvent={onRefresh}></RefreshIcon></th>
                         <th>Application</th>
                         <th>Git Branch</th>
                         <th>Port</th>

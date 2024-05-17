@@ -32,6 +32,7 @@ const BaseIcon = (props) => {
           onClick={onClickEventHandler}>
 
               <path d={props.d}/>
+              {props.d2 != undefined && <path fill={props.color2} d={props.d2}/>}
       </svg>
     </div>
   )

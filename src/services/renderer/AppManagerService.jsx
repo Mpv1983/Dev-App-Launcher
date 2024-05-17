@@ -170,6 +170,11 @@ export default class AppManagerService{
 
     updateAllAppStatus(){
         this.apps.forEach(app => {
+            app.status = 'Unknown';
+            this.pushEventToSubscriber(APP_EVENT, app.port, null);// No data needed, just trigger to refresh
+        });
+
+        this.apps.forEach(app => {
             this.updateAppStatus(app);
         });
     }
