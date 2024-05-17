@@ -91,9 +91,9 @@ export default class AppRunnerService {
   getProcessId(app) {
 
 
-    if(app.appType == 'Console'){
+    if(app.appType == 'Console' || app.isSslPort == true){
       var tempPid = this.getPIDByExecutableName(app);
-      return tempPid;
+      return tempPid; // why not do this for all apps. Because performance of the below code is faster at resolving pid
     }
 
     //  For non console apps
