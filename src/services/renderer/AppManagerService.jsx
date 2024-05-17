@@ -47,7 +47,7 @@ export default class AppManagerService{
      * @param {object} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, name:app.name, path:app.path, executable:app.executable, appType:app.appType, launchProfile:app.launchProfile, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
+        this.apps.push({port:app.port, isSslPort:app.isSslPort, name:app.name, path:app.path, executable:app.executable, appType:app.appType, launchProfile:app.launchProfile, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
 
         var appConfigs = [];
 
