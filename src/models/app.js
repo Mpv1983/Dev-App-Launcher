@@ -5,6 +5,7 @@ export class AppConfig{
             this.name = '';
             this.path = '';
             this.port = 0;
+            this.isSslPort = false;
             this.executable = '';
             this.appType = 'Not Set';
             this.url = '';
@@ -14,6 +15,7 @@ export class AppConfig{
             this.name = app.name;
             this.path = app.path;
             this.port = app.port;
+            this.isSslPort = app.isSslPort;
             this.executable = app.executable;
             this.appType = app.appType;
             this.url = app.url;
@@ -30,6 +32,7 @@ export class App{
             this.name = '';
             this.path = '';
             this.port = 0;
+            this.isSslPort = false;
             this.executable = '';
             this.appType = 'Not Set';
             this.url = '';
@@ -42,6 +45,7 @@ export class App{
             this.name = app.name;
             this.path = app.path;
             this.port = app.port;
+            this.isSslPort = app.isSslPort;
             this.executable = app.executable;
             this.appType = app.appType;
             this.url = app.url;

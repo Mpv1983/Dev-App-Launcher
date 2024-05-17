@@ -9,3 +9,16 @@
 .manage-app-form select{
     width: 310px;
 }
+
+.row{
+   display: inline-flex; 
+   width: 360px;
+}
+
+.row input{
+    width: unset;
+}
+
+.check-box-field{
+    padding-top: 6px;
+}

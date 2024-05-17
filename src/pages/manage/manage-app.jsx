@@ -1,15 +1,17 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
+import CheckBoxField from '../../component/checkbox-field.jsx';
 import TextField from '../../component/text-field.jsx';
 import FilePickerField from '../../component/file-picker-field.jsx';
 import SelectField from '../../component/select-field.jsx';
-import handleChange from '../../component/handleChange.js';
+import handleChange, { handleCheckboxChange } from '../../component/handleChange.js';
 import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import './manage-app.css';
 
 export default function ManageApp(props) {
 
     const [port, SetPort] = useState(0);
+    const [isSslPort, SetIsSslPort] = useState(false);
     const [appName, SetAppName] = useState('');
     const [executable, SetExecutable] = useState('');
     const [path, SetPath] = useState('');
@@ -73,7 +75,7 @@ export default function ManageApp(props) {
     }
 
     function saveApplication(){
-        serviceProvider.appManagerService.addApplication({port:port, name:appName, path:path, executable:executable, appType:appType, url:url, launchProfile: launchProfile });
+        serviceProvider.appManagerService.addApplication({port:port, isSslPort:isSslPort, name:appName, path:path, executable:executable, appType:appType, url:url, launchProfile: launchProfile });
         navigate("/");
     }
 
@@ -91,7 +93,10 @@ export default function ManageApp(props) {
                         <div className='right-align-container manage-app-form'>
                             <TextField label='App Name' value={appName} onChange={(e)=>handleChange(e, SetAppName)}/>
                             <TextField label='Executable' value={executable} onChange={(e)=>handleChange(e, SetExecutable)}/>
-                            <TextField label='Port' value={port} onChange={onUpdatePort}/>
+                            <div className='row'>
+                                <TextField label='Port' value={port} onChange={onUpdatePort}/>
+                                <CheckBoxField label='SSL' value={isSslPort} onChange={(e)=>handleCheckboxChange(e, SetIsSslPort)}/>
+                            </div>
                             <SelectField label='Launch Profile' value={launchProfile} options={launchProfileOptions} onChange={(e)=>handleChange(e, SetLaunchProfile)} />
                             <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI', 'Console']} onChange={onUpdateAppType} />
                             <TextField label='Url' value={url} onChange={(e)=>handleChange(e, SetUrl)}/>
