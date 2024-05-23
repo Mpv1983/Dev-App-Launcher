@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { HashRouter, Routes, Route } from "react-router-dom";
 import ConfigurationIndexPage from './pages/manage/configure-index.jsx'
-import ManageApp from './pages/manage/manage-app.jsx'
+import ManageApp from './pages/manage/manage-app/manage-app.jsx'
 import HomePage from './pages/home/home.jsx';
 import Layout from './layout/layout.jsx';
 import LogViewer from './pages/log-viewer/log-viewer-index.jsx';
