@@ -5,11 +5,14 @@ import Modal from '../../component/modal.jsx';
 import LogFilter from './log-viewer-filter.jsx';
 import './log-viewer-index.css';
 import FilterIcon from '../../icons/filter.jsx';
+import AppManagerService from '../../services/renderer/AppManagerService.jsx';
 
 export default function LogViewer(props) {
 
     const { port } = useParams();
     const { serviceProvider } = useContext(ServiceProviderContext);
+
+    /** @type {AppManagerService} */
     const appManagerService = serviceProvider.appManagerService;
 
     var app = appManagerService.getAppByPort(port);

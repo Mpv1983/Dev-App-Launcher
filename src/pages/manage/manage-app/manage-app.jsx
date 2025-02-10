@@ -1,28 +1,40 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import FilePickerField from '../../../component/file-picker-field.jsx';
 import ServiceProviderContext from '../../../contexts/serviceProviderContext.jsx';
 import DotNetApp from './dotnet-app.jsx';
-import ChildParentEventHandler from '../../../component/child-parent-event-handler.js';
+import CommandLineApp from './commandline-app.jsx';
 import './manage-app.css';
+import { IFile } from '../../../models/IFile.js';
 
 export default function ManageApp(props) {
 
-    const [dotNetFields, SetDotNetFields] = useState(new ChildParentEventHandler(console.log('notConfigured'), console.log('notConfigured')));
-    
+    const [selectedFile, SetSelectedFile] = useState(new IFile());
     const { serviceProvider } = useContext(ServiceProviderContext);
+
+    const dotNetAppRef = useRef(null);
+    const commandlineAppRef = useRef(null);
+    let dataFields = console.log;
     let navigate = useNavigate();
     
-    // file : {name:'', path:'', lastModified:0, lastModifiedDate:{}, size:0, type:''};
-    function handleFileSelected(selectedfile){
-        dotNetFields.sendData(selectedfile);
-    }
-
     function saveApplication(){
-        var applicationSettings = dotNetFields.getData();
+        var applicationSettings = dataFields();
         serviceProvider.appManagerService.addApplication(applicationSettings);
         navigate("/");
     }
+
+    useEffect(() => {
+
+        if (dotNetAppRef.current && selectedFile.extension === "csproj") {
+            dotNetAppRef.current.handleFileSelected(selectedFile);
+            dataFields = dotNetAppRef.current.getApplicationSettings;
+        }
+
+        if (commandlineAppRef.current && selectedFile.extension === "cmd") {
+            dotNetAppRef.current.handleFileSelected(selectedFile);
+        }
+
+    }, [selectedFile]); // Runs when selectedFile changes
 
     return <div>
 
@@ -32,10 +44,10 @@ export default function ManageApp(props) {
 
 
                 <div className='left-align-container'>
-                    <FilePickerField id="selectProjectFile" label="Select Project" fileExtension={['csproj','cmd']} onFileSelectedEvent={FileObject => handleFileSelected(FileObject)} />
+                    <FilePickerField id="selectProjectFile" label="Select Project" fileExtension={['csproj','cmd']} onFileSelectedEvent={FileObject => SetSelectedFile(FileObject)} />
   
-                    <DotNetApp registerEventSender={eventSender => SetDotNetFields(eventSender)}/>
-
+                    { selectedFile.extension == 'csproj' && <DotNetApp ref={dotNetAppRef} />}
+                    { selectedFile.extension == 'cmd' && <CommandLineApp ref={commandlineAppRef}/>}
                 </div>
 
             </div>

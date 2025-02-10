@@ -1,14 +1,11 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import CheckBoxField from '../../../component/checkbox-field.jsx';
 import TextField from '../../../component/text-field.jsx';
 import SelectField from '../../../component/select-field.jsx';
 import handleChange, { handleCheckboxChange } from '../../../component/handleChange.js';
-import { AppConfig } from '../../../models/app.js';
 import './manage-app.css';
 
-const DotNetApp = forwardRef((props, ref) => {
-
-    const stateRef = useRef(new AppConfig());
+const CommandLineApp = forwardRef((props, ref) => {
 
     const [port, SetPort] = useState(0);
     const [isSslPort, SetIsSslPort] = useState(false);
@@ -29,7 +26,16 @@ const DotNetApp = forwardRef((props, ref) => {
             getProfileOptions(file);
         },
         getApplicationSettings() {
-            return stateRef.current;
+            return {
+                port,
+                isSslPort,
+                name: appName,
+                path,
+                executable,
+                appType,
+                url,
+                launchProfile
+            };
         }
     }));
 
@@ -65,33 +71,21 @@ const DotNetApp = forwardRef((props, ref) => {
             });
     }
 
-    useEffect(() => {
-        stateRef.current = new AppConfig({ 
-            'name':appName, 
-            'path': path,
-            'port': port,
-            'isSslPort': isSslPort,
-            'executable': executable,
-            'appType': appType,
-            'url': url, 
-            'launchProfile': launchProfile });
-    }, [port, isSslPort, appName, path, executable, appType, url, launchProfile]);
-
     return (
         <div className='left-align-container'>
             <div className='right-align-container manage-app-form'>
-                <TextField label='App Name' value={appName} onChange={(e) => handleChange(e, SetAppName)} />
-                <TextField label='Executable' value={executable} onChange={(e) => handleChange(e, SetExecutable)} />
+                <TextField label='App Name' value={appName} onChange={(e) => handleChange(e, SetAppName, updateSender)} />
+                <TextField label='Executable' value={executable} onChange={(e) => handleChange(e, SetExecutable, updateSender)} />
                 <div className='row'>
                     <TextField label='Port' value={port} onChange={onUpdatePort} />
-                    <CheckBoxField label='SSL' value={isSslPort} onChange={(e) => handleCheckboxChange(e, SetIsSslPort)} />
+                    <CheckBoxField label='SSL' value={isSslPort} onChange={(e) => handleCheckboxChange(e, SetIsSslPort, updateSender)} />
                 </div>
-                <SelectField label='Launch Profile' value={launchProfile} options={launchProfileOptions} onChange={(e) => handleChange(e, SetLaunchProfile)} />
+                <SelectField label='Launch Profile' value={launchProfile} options={launchProfileOptions} onChange={(e) => handleChange(e, SetLaunchProfile, updateSender)} />
                 <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI', 'Console']} onChange={onUpdateAppType} />
-                <TextField label='Url' value={url} onChange={(e) => handleChange(e, SetUrl)} />
+                <TextField label='Url' value={url} onChange={(e) => handleChange(e, SetUrl, updateSender)} />
             </div>
         </div>
     );
 });
 
-export default DotNetApp;
+export default CommandLineApp;

@@ -1,11 +1,14 @@
 import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
 import { App, AppConfig } from '../../models/app.js'
+import { LogEntry } from '../../models/LogEntry.js';
 
 const LOG_EVENT = 'logEvent';
 const APP_EVENT = 'appEvent';
 
+/** This app manages starting, stopping and creating applications */
 export default class AppManagerService{
     constructor(){
+        /** Applications available to runner @type {Array<App>}  */
         this.apps = [];
         this.eventSubscriber = [];
         this.hasCheckedForConfigFile = false;
@@ -44,13 +47,13 @@ export default class AppManagerService{
 
     /**
      * Adds an application to the configuration. It will be saved to a json file
-     * @param {object} app - App configuration to be added
+     * @param {AppConfig} app - App configuration to be added
      */
     addApplication(app){
-        this.apps.push({port:app.port, isSslPort:app.isSslPort, name:app.name, path:app.path, executable:app.executable, appType:app.appType, launchProfile:app.launchProfile, url:app.url, log:[], status:'Unknown', gitBranch:'unknown' });
+        this.apps.push(new App(app));
 
+        // create a new array with of app configurations to be saved to the config file
         var appConfigs = [];
-
         this.apps.forEach(app => {
             appConfigs.push(new AppConfig(app));
         })
@@ -71,6 +74,7 @@ export default class AppManagerService{
         return clonedApps;
     }
 
+    /** @param {App} app - App to start */
     startApp(app){
         window.AppRunnerService.startDotNetApp({app})
         .then(() => {
@@ -78,17 +82,18 @@ export default class AppManagerService{
         });
     }
 
+    /** @param {App} app - App to stop */
     stopApp(app){
         window.AppRunnerService.stopDotNetApp({app})
         .then((runner) => {
-            app.log = [];
+            app.log = []; // clears the logs for that app when stopped
         }); 
     }
 
     /**
      * This will register a subscriber to events
      * @param {string} eventType - Event type subscribing too, possible values are (logEvent, appEvent).
-     * @param {object} app - app event is related to.
+     * @param {App} app - app event is related to.
      * @param {function} callback - method to call on subscriber.
      */
     addSubscriber(eventType, app, callback){
@@ -101,6 +106,10 @@ export default class AppManagerService{
         }
     }
 
+    /**
+     * @param {string} eventType - Event to be unsubscribed, possible values are (logEvent, appEvent).
+     * @param {App} app - app event is related to.
+     */
     removeSubscriber(eventType, app){
         const index = this.eventSubscriber.findIndex(subscriber => subscriber.port == app.port && subscriber.eventType == eventType);
         if(index > -1){
@@ -123,8 +132,9 @@ export default class AppManagerService{
 
         jsonArray.forEach(json=>{
             var lineNumber = this.apps[index].log.length + 1;
-            var logEntry = { lineNumber: lineNumber, json: json, appInfo: {name: this.apps[index].name, port: this.apps[index].port }};
+            var logEntry = new LogEntry({ lineNumber: lineNumber, json: json, appInfo: {name: this.apps[index].name, port: this.apps[index].port }});
             this.apps[index].log.push(logEntry);
+            console.log('logobject', logEntry);
             this.pushEventToSubscriber(LOG_EVENT, data.message.port, logEntry );
         });
     }
@@ -133,6 +143,7 @@ export default class AppManagerService{
      * This will return an App by its port number
      * @param {number} port - Port for app to retrieve.
      * @param {boolean} clone - should this method return a clone of the app (default is false)
+     * @returns {App}
      */
     getAppByPort(port, clone = false){
         const index = this.apps.findIndex(app => app.port == port);

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { FilePicker } from 'react-file-picker'
 import Modal from './modal.jsx'
 import './file-picker-field.css';
+import { IFile } from '../models/IFile.js';
 
 export default function FilePickerField(props) {
     const [modalState, SetModal] = useState(false);
-    const [file, SetFile] = useState({name:'', path:'', lastModified:0, lastModifiedDate:{}, size:0, type:'', extension:''});
+    const [file, SetFile] = useState(new IFile());
     const [fileSelectError, SetFileSelectError] = useState("Error: could not select file");
     const modalId = `modal${props.id}`;
     const label = (props.label == undefined ? 'Select File' : props.label);
