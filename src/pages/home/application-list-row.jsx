@@ -8,6 +8,7 @@ import LogFileIcon from '../../icons/log-file.jsx';
 import SwaggerIcon from '../../icons/swagger.jsx';
 import WebAppIcon from '../../icons/webApp.jsx';
 import './application-list-row.css'
+import { AppTypes } from '../../models/app.js';
 
 export default function ApplicationListRow(props) {
 
@@ -59,8 +60,8 @@ export default function ApplicationListRow(props) {
                 <td>{app.port}</td>
                 <td className='action-cell'>
                     <span><LogFileIcon color="#ffffff" hoverColor="#b3b3b3" size="14" tooltip="View Logs" onClickEvent={()=>onLogs(app)}/><span>Logs</span></span>
-                    {app.appType == 'API with swagger' && <span><SwaggerIcon tooltip="Open swagger" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>API</span></span>}
-                    {app.appType == 'UI' && <span><WebAppIcon tooltip="Open UI" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>UI</span></span>}
+                    {app.appType == AppTypes.DotNetApps.ApiWithSwagger && <span><SwaggerIcon tooltip="Open swagger" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>API</span></span>}
+                    {app.appType == AppTypes.DotNetApps.Ui && <span><WebAppIcon tooltip="Open UI" size="small" onClickEvent={()=>onOpenUrl(app)}/><span>UI</span></span>}
                 </td>
             </tr>
 ;

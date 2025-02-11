@@ -4,6 +4,10 @@ import getDotNetRunString from '../../utils/getDotNetRunString.js'
 const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 
+
+const path = require('path');
+const { spawn } = require('child_process');
+
 export default class AppRunnerService {
   constructor() {
 
@@ -76,6 +80,89 @@ export default class AppRunnerService {
       eventPublisher('appEvent', {port:app.port, status:'Stopping'});
       return false;
     });
+  }
+
+  startCommandlineApp(app, eventPublisher) {
+      if (!app.path) {
+          console.error('Please provide the path of the command-line app.');
+          return;
+      }
+  
+      // Extract the directory from the app path
+      const appDir = path.dirname(app.path);
+  
+      // Run the command with the correct working directory
+      const commandLineProcess = spawn(app.path, [], { shell: true, cwd: appDir });
+  
+      commandLineProcess.stdout.on('data', (data) => {
+          const dataToSend = { message: { data: data.toString(), port: app.port } };
+          eventPublisher('publishDotNetOutput', dataToSend);
+          console.log(`.NET app stdout: ${data.toString()}`);
+      });
+  
+      commandLineProcess.stderr.on('data', (data) => {
+          console.error(`.NET app stderr: ${data.toString()}`);
+      });
+  
+      commandLineProcess.on('close', (code) => {
+          console.log(`.NET app process exited with code ${code}`);
+      });
+  
+      limitedRetry(10, 1000, () => {
+          var isAppRunning = this.checkIfAppRunning(app);
+  
+          if (isAppRunning) {
+              eventPublisher('appEvent', { port: app.port, status: 'Running' });
+              return true;
+          }
+  
+          eventPublisher('appEvent', { port: app.port, status: 'Starting' });
+          return false;
+      });
+  }
+  
+  startCommandlineAppInNewWindow(app, eventPublisher) {
+
+    if (!app.path) {
+      console.error('Please provide the path of the commandline app.');
+      return;
+    }
+
+    //const path = require('path');
+    const appDir = path.dirname(app.path); // Get directory of the app
+    const commandString = `start cmd.exe /c "cd /d ${appDir} && ${app.path}"`;
+
+    //var commandString = `start cmd.exe /c "${app.path}"`;
+    var commandLineProcess = exec(commandString);
+    console.log(`PID OF RUNNING PROCESS ${commandLineProcess.pid}`)
+    console.log(`PID OF RUNNING PROCESS ${commandLineProcess}`)
+
+    commandLineProcess.stdout.on('data', (data) => {
+      const dataToSend = { message: { data:data, port:app.port } };
+      eventPublisher('publishDotNetOutput', dataToSend);
+      console.log(`.NET app stdout: ${data}`);
+    });
+
+    commandLineProcess.stderr.on('data', (data) => {
+      console.error(`.NET app stderr: ${data}`);
+    });
+
+    commandLineProcess.on('close', (code) => {
+      console.log(`.NET app process exited with code ${code}`);
+    });
+
+    //limitedRetry(10, 1000, ()=>{
+
+      //var isAppRunning = this.checkIfAppRunning(app);
+
+      //if(isAppRunning){
+        eventPublisher('appEvent', {port:app.port, status:'Running'});
+        return true;
+      //}
+
+      //eventPublisher('appEvent', {port:app.port, status:'Starting'});
+      //return false;
+    //});
   }
 
   checkIfAppRunning(app){

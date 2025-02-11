@@ -36,6 +36,11 @@ export default function registerServices(ipcMain, mainWindow){
     return;
   });
   
+  ipcMain.handle('startCommandlineApp', async (event, args) => {
+    appRunnerService.startCommandlineApp(args.app, sender);
+    return;
+  });
+
   ipcMain.handle('checkIfAppRunning', async(event, args)=>{
     return appRunnerService.checkIfAppRunning(args.app);
   });
