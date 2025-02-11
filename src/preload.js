@@ -9,6 +9,9 @@ contextBridge.exposeInMainWorld('AppRunnerService', {
   stopDotNetApp: async (args) => {
     return await ipcRenderer.invoke('stopDotNetApp', args);
   },
+  startCommandlineApp: async (args) => {
+    return await ipcRenderer.invoke('startCommandlineApp', args);
+  },
   subscribeToDotNetOutput: (callback) => {
     ipcRenderer.on('publishDotNetOutput', (event, data) => {
       callback(data);

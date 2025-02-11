@@ -3,7 +3,7 @@ import CheckBoxField from '../../../component/checkbox-field.jsx';
 import TextField from '../../../component/text-field.jsx';
 import SelectField from '../../../component/select-field.jsx';
 import handleChange, { handleCheckboxChange } from '../../../component/handleChange.js';
-import { AppConfig } from '../../../models/app.js';
+import { AppConfig, AppTypes } from '../../../models/app.js';
 import './manage-app.css';
 
 const DotNetApp = forwardRef((props, ref) => {
@@ -87,7 +87,7 @@ const DotNetApp = forwardRef((props, ref) => {
                     <CheckBoxField label='SSL' value={isSslPort} onChange={(e) => handleCheckboxChange(e, SetIsSslPort)} />
                 </div>
                 <SelectField label='Launch Profile' value={launchProfile} options={launchProfileOptions} onChange={(e) => handleChange(e, SetLaunchProfile)} />
-                <SelectField label='App Type' value={appType} options={['Not Set', 'API', 'API with swagger', 'UI', 'Console']} onChange={onUpdateAppType} />
+                <SelectField label='App Type' value={appType} options={AppTypes.DotNetAppsOptions} onChange={onUpdateAppType} />
                 <TextField label='Url' value={url} onChange={(e) => handleChange(e, SetUrl)} />
             </div>
         </div>

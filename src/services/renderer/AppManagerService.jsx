@@ -1,5 +1,5 @@
 import parseDotNetOutputToJson from '../../utils/dotNetJsonParser.js';
-import { App, AppConfig } from '../../models/app.js'
+import { App, AppConfig, AppTypes } from '../../models/app.js'
 import { LogEntry } from '../../models/LogEntry.js';
 
 const LOG_EVENT = 'logEvent';
@@ -76,10 +76,23 @@ export default class AppManagerService{
 
     /** @param {App} app - App to start */
     startApp(app){
-        window.AppRunnerService.startDotNetApp({app})
-        .then(() => {
-            //
-        });
+
+        if(app.appType == AppTypes.NotSet){
+            return;
+        }
+        
+        if(AppTypes.DotNetAppsOptions.includes(app.appType)){
+            window.AppRunnerService.startDotNetApp({app})
+            .then(() => {
+                //
+            });
+        }
+        if(AppTypes.CommandLineOptions.includes(app.appType)){
+            window.AppRunnerService.startCommandlineApp({app})
+            .then(() => {
+                //
+            });
+        }
     }
 
     /** @param {App} app - App to stop */

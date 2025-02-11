@@ -46,3 +46,43 @@ export class App extends AppConfig{
 
     }
 }
+
+export class AppTypes{
+
+    static NotSet = 'Not Set';
+    static get DotNetApps() {
+        return DotNetAppTypes;
+    }
+
+    static get CommandLine() {
+        return CommandLineTypes;
+    }
+
+    static get DotNetAppsOptions() {
+        return [this.NotSet, DotNetAppTypes.Api, DotNetAppTypes.ApiWithSwagger, DotNetAppTypes.Ui, DotNetAppTypes.Console];
+    }
+
+    static get CommandLineOptions() {
+        return [this.NotSet, CommandLineTypes.BasicCommandLine];
+    }
+    
+}
+
+export class DotNetAppTypes{
+    /** API */
+    static Api = 'API';
+
+    /** API with swagger */
+    static ApiWithSwagger = 'API with swagger';
+
+    /** UI */
+    static Ui = 'UI';
+
+    /** Console */
+    static Console = 'Console';
+}
+
+export class CommandLineTypes{
+    /** BasicCommandLine */
+    static BasicCommandLine = 'BasicCommandLine';
+}

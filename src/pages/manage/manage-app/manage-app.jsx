@@ -31,7 +31,8 @@ export default function ManageApp(props) {
         }
 
         if (commandlineAppRef.current && selectedFile.extension === "cmd") {
-            dotNetAppRef.current.handleFileSelected(selectedFile);
+            commandlineAppRef.current.handleFileSelected(selectedFile);
+            dataFields = commandlineAppRef.current.getApplicationSettings;
         }
 
     }, [selectedFile]); // Runs when selectedFile changes
