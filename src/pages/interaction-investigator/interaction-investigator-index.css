@@ -24,3 +24,51 @@
   .info-box span{
     margin: 5px;
   }
+
+.Error{
+    color: red;
+}
+
+.Warning{
+    color: orange;
+}
+
+.Console{
+    color: blue;
+}
+
+.Information{
+    color: aqua;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  text-align: left;
+}
+
+.limited-text {
+  display: block; 
+  width: 10ch; /* Limit to 10 characters */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  margin-bottom: 8px;
+}
+
+.limited-text:hover {
+  width: auto; /* Expand width on hover */
+  white-space: normal; /* Allow wrapping */
+  overflow: visible; /* Show full text */
+  background-color: rgba(0, 0, 0, 0.8); /* Optional: Add background */
+  color: white; /* Optional: Improve readability */
+  padding: 2px 4px; /* Optional: Add padding */
+  border-radius: 4px; /* Optional: Round corners */
+  position: absolute; /* Ensure it appears above */
+  z-index: 100;
+}

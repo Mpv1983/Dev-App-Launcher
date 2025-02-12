@@ -128,11 +128,9 @@ export default class AppRunnerService {
       return;
     }
 
-    //const path = require('path');
     const appDir = path.dirname(app.path); // Get directory of the app
     const commandString = `start cmd.exe /c "cd /d ${appDir} && ${app.path}"`;
 
-    //var commandString = `start cmd.exe /c "${app.path}"`;
     var commandLineProcess = exec(commandString);
     console.log(`PID OF RUNNING PROCESS ${commandLineProcess.pid}`)
     console.log(`PID OF RUNNING PROCESS ${commandLineProcess}`)
@@ -151,18 +149,9 @@ export default class AppRunnerService {
       console.log(`.NET app process exited with code ${code}`);
     });
 
-    //limitedRetry(10, 1000, ()=>{
+    eventPublisher('appEvent', {port:app.port, status:'Running'});
+    return true;
 
-      //var isAppRunning = this.checkIfAppRunning(app);
-
-      //if(isAppRunning){
-        eventPublisher('appEvent', {port:app.port, status:'Running'});
-        return true;
-      //}
-
-      //eventPublisher('appEvent', {port:app.port, status:'Starting'});
-      //return false;
-    //});
   }
 
   checkIfAppRunning(app){

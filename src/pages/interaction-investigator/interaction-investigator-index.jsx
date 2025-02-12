@@ -3,14 +3,42 @@ import ServiceProviderContext from '../../contexts/serviceProviderContext.jsx';
 import PlayIcon from '../../icons/play.jsx';
 import StopIcon from '../../icons/stop.jsx';
 import './interaction-investigator-index.css';
+import { LogEntry } from '../../models/LogEntry.js';
+
+class GroupedInteraction{
+    constructor(port, newKey){
+        /** @type {Number} */
+        this.port = port;
+
+        /** @type {Number} */
+        this.rowKey = newKey;
+
+        /** @type {Array<LogEntry>} */
+        this.interactions =  [];
+
+        /** @type {String} */
+        this.httpVerb =  '';
+
+        /** @type {String} */
+        this.endPoint =  '';
+
+        /** @type {boolean} */
+        this.displayDetails = false;
+    }
+
+}
 
 export default function InteractionInvestigatorIndex(props) {
 
     const { serviceProvider } = useContext(ServiceProviderContext);
     const appManagerService = serviceProvider.appManagerService;
     const [isRecording, SetRecordingState] = useState(false);
+
+    /** @type {[Array<LogEntry>, React.Dispatch<React.SetStateAction<Array<LogEntry>>>]} */
     const [interactions, setInteractions] = useState([]);
     const [interactingApps, setInteractingApps] = useState([]);
+
+    /** @type {[Array<GroupedInteraction>, React.Dispatch<React.SetStateAction<Array<GroupedInteraction>>>]} */
     const [groupedInteractions, setGroupedInteractions] = useState([]);
 
     function onStartRecording(){
@@ -41,13 +69,7 @@ export default function InteractionInvestigatorIndex(props) {
 
             //  Add new interaction group to array (with will be represented as a new table row in the table below)
             if(gInteractions.length == 0 || gInteractions[gInteractions.length - 1].port != interactionEvent.appInfo.port){
-                gInteractions.push({
-                    port: interactionEvent.appInfo.port,
-                    rowKey: (gInteractions.length + 1),
-                    interactions: [],
-                    httpVerb: '',
-                    endPoint: ''
-                });
+                gInteractions.push(new GroupedInteraction(interactionEvent.appInfo.port, (gInteractions.length + 1)));
             }
 
             //  Add the interactionEvent to the current row
@@ -64,12 +86,19 @@ export default function InteractionInvestigatorIndex(props) {
         setGroupedInteractions(gInteractions);
 
         SetRecordingState(false);
-        console.log(interactions, gInteractions);
+        console.log('interactions and grouped',interactions, gInteractions);
     }
 
     function updateInteractionEvent(interactionEvent){
         setInteractions(prevInteractions => [...prevInteractions, interactionEvent]);
     }
+
+
+    function toggleDetails (rowKey){
+        groupedInteractions.find(x=> x.rowKey == rowKey).displayDetails = !groupedInteractions.find(x=> x.rowKey == rowKey).displayDetails;
+        setGroupedInteractions(prevInteractions => [...prevInteractions]);
+    };
+
 
     useEffect(() => {
 
@@ -108,9 +137,23 @@ export default function InteractionInvestigatorIndex(props) {
 
                     (appInfo.port == groupedInteraction.port) ? (
                         <td key={`${groupedInteraction.rowKey}-${appInfo.port}`} className="cell-with-line">
-                            <div className='info-box'>
+                            <div className='info-box' onClick={()=> toggleDetails(groupedInteraction.rowKey)}>
                                 <span>{groupedInteraction.httpVerb}</span>
                                 <span>{groupedInteraction.endPoint}</span>
+                                <ul>
+                                {!groupedInteraction.displayDetails && 
+                                    <li>
+                                        {groupedInteraction.interactions.length} log entries
+                                    </li>
+                                }
+                                {groupedInteraction.displayDetails && groupedInteraction.interactions.map((logEntry)=>(
+                                    <li 
+                                        key={`${groupedInteraction.rowKey}-${appInfo.port}-${logEntry.lineNumber}`} 
+                                        className="limited-text">
+                                        {logEntry.json.Message}
+                                    </li>
+                                ))}
+                                </ul>
                             </div>
                         </td>
                     ) : (

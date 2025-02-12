@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './modal.css';
 
+/**
+ * @typedef {Object} ModalProps
+ * @property {boolean} showModal - When changed to true the modal will display.
+ * @property {() => void} modalClosedEvent - If the modal is closed from within, it fires an event back to the parent letting it know its closed to keep the parent state in sync.
+ */
+
+/**
+ * Modal component
+ * @param {ModalProps} props - The properties for the button.
+ */
 export default function Modal(props) {
 
     const [displayModal, setModal] = useState("none");
