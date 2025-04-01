@@ -22,15 +22,21 @@ export default function registerServices(ipcMain, mainWindow){
   services.push(gitService);
   services.push(webBrowserService);
 
-  ipcMain.handle('startDotNetApp', async (event, args) => {
-      appRunnerService.startDotNetApp(args.app, sender);
-      return;
-    });
-    
+/**
+ * Sends a message to ipcRenderer which other processes can subscribe to
+ *
+ * @param {string} eventType - The type of event being sent.
+ * @param {any} msg - The message content to send.
+ */
   function sender(eventType, msg){
     mainWindow.webContents.send(eventType, msg);
   }
   
+  ipcMain.handle('startDotNetApp', async (event, args) => {
+    appRunnerService.startDotNetApp(args.app, sender);
+    return;
+  });
+    
   ipcMain.handle('stopDotNetApp', async (event, args) => {
     await appRunnerService.stopDotNetApp(args.app, sender);
     return;

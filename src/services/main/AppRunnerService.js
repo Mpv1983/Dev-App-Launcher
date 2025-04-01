@@ -1,6 +1,7 @@
 import ResponseModel from '../../models/response.js';
 import limitedRetry from '../../utils/limitedRetry.js'
 import getDotNetRunString from '../../utils/getDotNetRunString.js'
+import { App } from '../../models/app.js';
 const exec = require('child_process').exec;
 const execSync = require('child_process').execSync;
 
@@ -13,6 +14,11 @@ export default class AppRunnerService {
 
   }
 
+  /**
+   * Starts a dot net app
+   * @param {App} app - The app to start.
+   * @param {function(string, any): void} eventPublisher - A function that sends a message with an event type.
+   */
   startDotNetApp(app, eventPublisher) {
 
     if (!app.path) {
@@ -25,7 +31,9 @@ export default class AppRunnerService {
       return;
     }
 
-    var dotnetProcess = exec(getDotNetRunString(app));
+    var runstring = getDotNetRunString(app);
+    console.log('starting app with string', runstring);
+    var dotnetProcess = exec(runstring);
 
     dotnetProcess.stdout.on('data', (data) => {
       const dataToSend = { message: { data:data, port:app.port } };

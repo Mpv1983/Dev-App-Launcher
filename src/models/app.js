@@ -59,7 +59,7 @@ export class AppTypes{
     }
 
     static get DotNetAppsOptions() {
-        return [this.NotSet, DotNetAppTypes.Api, DotNetAppTypes.ApiWithSwagger, DotNetAppTypes.Ui, DotNetAppTypes.Console];
+        return [this.NotSet, DotNetAppTypes.Api, DotNetAppTypes.ApiWithSwagger, DotNetAppTypes.Ui, DotNetAppTypes.AzureFunction, DotNetAppTypes.Console];
     }
 
     static get CommandLineOptions() {
@@ -80,6 +80,9 @@ export class DotNetAppTypes{
 
     /** Console */
     static Console = 'Console';
+
+    /** Azure Function */
+    static AzureFunction = 'Azure Function';
 }
 
 export class CommandLineTypes{
