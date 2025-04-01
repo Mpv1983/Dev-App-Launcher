@@ -41,6 +41,10 @@ const DotNetApp = forwardRef((props, ref) => {
     function onUpdateAppType(e) {
         var newAppType = handleChange(e, SetAppType);
         setAppUrl(newAppType, port);
+
+        if(newAppType == AppTypes.DotNetApps.AzureFunction){
+            SetExecutable('func.exe');
+        }
     }
 
     function setAppUrl(newAppType, newPort) {
