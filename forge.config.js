@@ -1,12 +1,15 @@
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: "./src/icons/app_runner_icon"
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        setupIcon: "./src/icons/app_runner_icon.ico"
+      },
     },
     {
       name: '@electron-forge/maker-zip',
