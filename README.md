@@ -54,6 +54,8 @@ You can now distribute or run this .exe directly.
 ## 📁 Project Structure
 ```bash
 dev-app-launcher/
+├── .webpack/         # Webpack build artifacts (auto-generated)
+├── node_modules/     # Installed dependencies from npm
 ├── src/              # Application source code
 ├── out/              # Output folder for builds
 ├── package.json      # npm configuration
